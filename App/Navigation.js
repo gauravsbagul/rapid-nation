@@ -24,7 +24,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SelectLocation from '@View/SelectLocation';
 import Home from './screens/Home';
 import { connect } from 'react-redux';
-import { fetchUser } from './actions/Auth/userActions';
+import { fetchUser } from './Redux/actions/Auth/userActions';
 import { colors } from './Asset/colors/colors';
 import Order from './screens/Order';
 import ScanAndPay from './screens/ScanAndPay';

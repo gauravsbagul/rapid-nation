@@ -13,7 +13,7 @@ import { Icon, Button, Footer, Container } from 'native-base';
 import Styles from './Styles';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
-import { login } from '../../actions/Auth/userActions';
+import { login } from '../../Redux/actions/Auth/userActions';
 
 const { width, height } = Dimensions.get('window');
 

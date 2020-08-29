@@ -10,7 +10,7 @@ import {
 import { Icon, Button } from 'native-base';
 import Styles from './Styles';
 import { connect } from 'react-redux';
-import { loginWithEmailPassword } from '../../actions/Auth/userActions';
+import { loginWithEmailPassword } from '../../Redux/actions/Auth/userActions';
 
 const { width, height } = Dimensions.get('window');
 
