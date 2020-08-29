@@ -6,6 +6,7 @@ import {
   IS_AUTHENTICATED,
   LOGIN_SUCCESS,
   REGISTER_SUCCESS,
+  VERIFY_OTP,
 } from '../types';
 
 const API = 'https://portal.rapidnation.in/customer/';
@@ -20,7 +21,10 @@ export const signUp = (data) => {
         data,
       };
       const response = await axios(body);
-
+      console.log('signUp -> response', response);
+      if (response) {
+        getOTP(data.phone);
+      }
       //Dispatch User Token
       dispatch({
         type: REGISTER_SUCCESS,
@@ -50,6 +54,7 @@ export const clearRegisterDetailsProps = () => {
 };
 
 export const getOTP = (phone) => {
+  console.log('getOTP -> phone', phone);
   return async (dispatch, getState) => {
     try {
       const body = {
@@ -59,21 +64,34 @@ export const getOTP = (phone) => {
           phone,
         },
       };
+      console.log('getOTP -> body', body);
       const response = await axios(body);
+      console.log('getOTP -> response', response);
 
-      //Dispatch User Token
       dispatch({
         type: GET_OTP,
         payload: { response: response?.data, error: false },
       });
     } catch (error) {
-      //Catch Login Error
       dispatch({
         type: GET_OTP,
         payload: { response: error?.response, error: true },
       });
     }
   };
+};
+
+//To clearOtpProps
+export const clearOtpProps = () => {
+  return (dispatch) =>
+    new Promise((resolve) => {
+      resolve(
+        dispatch({
+          type: GET_OTP,
+          payload: undefined,
+        }),
+      );
+    });
 };
 
 export const fetchUser = () => async (dispatch) => {
@@ -94,6 +112,7 @@ export const fetchUser = () => async (dispatch) => {
 
 //To loginWithEmailPassword
 export const loginWithEmailPassword = (data) => {
+  console.log('loginWithEmailPassword -> data', data);
   return async (dispatch, getState) => {
     try {
       const body = {
@@ -102,14 +121,16 @@ export const loginWithEmailPassword = (data) => {
         data,
       };
       const response = await axios(body);
+      console.log('loginWithEmailPassword -> response', response);
 
-      //Dispatch User Token
+      await AsyncStorage.setItem('userDetails', JSON.stringify(response?.data));
+
       dispatch({
         type: LOGIN_SUCCESS,
         payload: { response: response?.data, error: false },
       });
     } catch (error) {
-      //Catch Login Error
+      console.log('loginWithEmailPassword -> error', error);
       dispatch({
         type: LOGIN_SUCCESS,
         payload: { response: error?.response, error: true },
@@ -132,10 +153,11 @@ export const clearLoginDetailsProps = () => {
 };
 
 export const isAuthenticatedFunc = (isAuthenticated) => {
-  dispatch({
-    type: IS_AUTHENTICATED,
-    payload: { response: isAuthenticated, error: false },
-  });
+  return (dispatch) =>
+    dispatch({
+      type: IS_AUTHENTICATED,
+      payload: { response: isAuthenticated, error: false },
+    });
 };
 
 //To forgetPassword
@@ -174,6 +196,46 @@ export const clearForgetPasswordProps = () => {
       resolve(
         dispatch({
           type: LOGINFORGOT_PASSWORD_SUCCESS,
+          payload: undefined,
+        }),
+      );
+    });
+};
+
+//To verifyOTPFunc
+export const verifyOTPFunc = (data) => {
+  console.log('verifyOTPFunc -> data', data);
+  return async (dispatch, getState) => {
+    try {
+      const body = {
+        method: 'POST',
+        url: API + 'api/verifyAccount',
+        data,
+      };
+      console.log('verifyOTPFunc -> body', body);
+      const response = await axios(body);
+      console.log('verifyOTP -> response', response);
+
+      dispatch({
+        type: VERIFY_OTP,
+        payload: { response: response?.data, error: false },
+      });
+    } catch (error) {
+      dispatch({
+        type: VERIFY_OTP,
+        payload: { response: error?.response, error: true },
+      });
+    }
+  };
+};
+
+//To clearVerifyOTPProps
+export const clearVerifyOTPProps = () => {
+  return (dispatch) =>
+    new Promise((resolve) => {
+      resolve(
+        dispatch({
+          type: VERIFY_OTP,
           payload: undefined,
         }),
       );

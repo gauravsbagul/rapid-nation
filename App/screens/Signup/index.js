@@ -12,13 +12,21 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
-import { signUp, getOTP } from '../../Redux/actions/Auth/userAuth';
+import {
+  signUp,
+  getOTP,
+  clearOtpProps,
+  clearRegisterDetailsProps,
+  verifyOTPFunc,
+  clearVerifyOTPProps,
+  isAuthenticatedFunc,
+} from '../../Redux/actions/Auth/userAuth';
 import { OtpVerify } from './OtpVerify';
 import Styles from './Styles';
 
 const { width, height } = Dimensions.get('window');
 const emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
+const customerid = '5f4a72ded22361565e1ffe57';
 const Signup = (props) => {
   const [verify, setVerify] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -29,6 +37,10 @@ const Signup = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    console.log(
+      'Signup -> props.user?.registerResponse',
+      props.user?.registerResponse,
+    );
     if (props.navigation.isFocused()) {
       if (props.user?.registerResponse) {
         if (
@@ -36,6 +48,9 @@ const Signup = (props) => {
           props.user?.registerResponse?.response?.response &&
           props.user?.registerResponse?.response?.status
         ) {
+          props.clearRegisterDetailsProps();
+          console.log('Signup ->  props.user', props.user);
+
           setIsLoading(false);
           Alert.alert(
             ``,
@@ -43,7 +58,7 @@ const Signup = (props) => {
             [
               {
                 text: 'OK',
-                onPress: () => props.navigation.navigate('SelectLocation'),
+                onPress: () => setIsModalVisible(true),
               },
             ],
             {
@@ -51,33 +66,48 @@ const Signup = (props) => {
             },
           );
         } else {
-          Alert.alert(``, 'Please Enter valid Phone Number', [{ text: 'OK' }], {
-            cancelable: false,
-          });
+          setIsLoading(false);
+          props.clearRegisterDetailsProps();
+          console.log('Signup -> props esle ', props);
+          Alert.alert(
+            ``,
+            props.user?.registerResponse?.response?.response ||
+              'Something went wrong!',
+            [
+              {
+                text: 'OK',
+                onPress: () => setIsModalVisible(true),
+              },
+            ],
+            {
+              cancelable: false,
+            },
+          );
         }
       }
     }
+
+    if (
+      props.user?.verifyOTP?.response?.response &&
+      props.user?.verifyOTP?.response?.status
+    ) {
+      console.log('Signup -> props.user', props.user);
+
+      setIsModalVisible(false);
+      setVerify(true);
+      // props.isAuthenticatedFunc(true);
+      props.navigation.navigate('SelectLocation');
+    } else {
+      props.isAuthenticatedFunc(false);
+    }
   }, [props]);
 
-  const onVerifyPhone = () => {
-    if (phone.length != 10) {
-      Alert.alert(
-        ``,
-        'Something went wrong please try again!',
-        [{ text: 'OK' }],
-        {
-          cancelable: false,
-        },
-      );
-    } else {
-      props.getOTP(phone);
-      setIsModalVisible(true);
-    }
-  };
-
-  const onVerifyOtp = () => {
-    setIsModalVisible(!isModalVisible);
-    setVerify(true);
+  const onVerifyOtp = (otp) => {
+    console.log('onVerifyOtp -> otp', otp);
+    props.verifyOTPFunc({
+      phone: '9604374093',
+      otp: '1234',
+    });
   };
 
   const onSignUp = () => {
@@ -99,6 +129,7 @@ const Signup = (props) => {
       }
     }
   };
+  console.log('isModalVisible', isModalVisible);
 
   return (
     <View
@@ -215,14 +246,10 @@ const Signup = (props) => {
               value={phone}
               placeholder={'Phone Number *'}
             />
-            <TouchableOpacity
-              onPress={() => {
-                // onVerifyPhone();
-              }}>
-              <Text style={{ fontSize: 10, color: '#FF0000' }}>
-                {!verify ? 'Verify' : 'Verified'}
-              </Text>
-            </TouchableOpacity>
+
+            <Text style={{ fontSize: 10, color: '#FF0000' }}>
+              {!verify ? 'Verify' : 'Verified'}
+            </Text>
           </View>
         </View>
 
@@ -346,7 +373,7 @@ const Signup = (props) => {
         swipeDirection={['down']}
         onSwipeMove={(val) => {}}
         onSwipeComplete={() => setIsModalVisible(false)}>
-        <OtpVerify phone={phone} Verified={() => onVerifyOtp()} />
+        <OtpVerify phone={phone} onVerifyOtp={onVerifyOtp} />
       </Modal>
     </View>
   );
@@ -355,6 +382,11 @@ const Signup = (props) => {
 const mapDispatchToProps = {
   signUp,
   getOTP,
+  clearOtpProps,
+  clearRegisterDetailsProps,
+  verifyOTPFunc,
+  clearVerifyOTPProps,
+  isAuthenticatedFunc,
 };
 const mapStateToProps = ({ user }) => ({
   user,

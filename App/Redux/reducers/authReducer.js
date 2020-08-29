@@ -5,6 +5,7 @@ import {
   IS_AUTHENTICATED,
   LOGIN_SUCCESS,
   REGISTER_SUCCESS,
+  VERIFY_OTP,
 } from '../actions/types';
 
 const initialState = {
@@ -45,6 +46,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         forgotPassword: payload,
+      };
+    case VERIFY_OTP:
+      return {
+        ...state,
+        verifyOTP: payload,
       };
     default:
       return state;

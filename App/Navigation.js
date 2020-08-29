@@ -255,7 +255,7 @@ const Navigation = ({ isAuthenticated, fetchUser }) => {
     <>
       <StatusBar backgroundColor={colors.white} barStyle="dark-content" />
       <NavigationContainer>
-        {!isAuthenticated.isAuthenticated ? <UserScreens /> : <AuthStack />}
+        {isAuthenticated.isAuthenticated ? <UserScreens /> : <AuthStack />}
       </NavigationContainer>
     </>
   );

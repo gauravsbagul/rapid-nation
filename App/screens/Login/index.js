@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import {
   clearLoginDetailsProps,
   loginWithEmailPassword,
+  isAuthenticatedFunc,
 } from '../../Redux/actions/Auth/userAuth';
 import Styles from './Styles';
 
@@ -28,12 +29,14 @@ const Login = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    console.log('Login -> props.user', props.user);
     if (props.navigation.isFocused()) {
       if (props.user?.loginResponse) {
         if (
           !props.user?.loginResponse?.error &&
           props.user?.loginResponse?.response?.response
         ) {
+          props.clearLoginDetailsProps();
           setIsLoading(false);
           if (!props.user?.loginResponse?.response?.status) {
             Alert.alert(
@@ -42,7 +45,6 @@ const Login = (props) => {
               [
                 {
                   text: 'OK',
-                  onPress: () => props.clearLoginDetailsProps(),
                 },
               ],
               {
@@ -50,8 +52,10 @@ const Login = (props) => {
               },
             );
           } else {
+            props.isAuthenticatedFunc(true);
           }
         } else {
+          props.clearLoginDetailsProps();
           Alert.alert(
             ``,
             'Something went wrong, please try again!',
@@ -66,12 +70,17 @@ const Login = (props) => {
   }, [props]);
 
   const onLogin = () => {
+    console.log('onLogin -> phone', phone);
+    console.log('onLogin -> password', password);
+    console.log('onLogin -> email', email);
+
     if (!email || !password || !phone) {
       Alert.alert('', 'Empty field is not allowed', [{ text: 'OK' }], {
         cancelable: false,
       });
       return false;
     } else if (isNaN(email)) {
+      console.log('onLogin -> email', email);
       if (!emailReg.test(email.trim())) {
         Alert.alert('', 'Please enter valid EmailID', [{ text: 'OK' }], {
           cancelable: false,
@@ -310,6 +319,7 @@ const Login = (props) => {
 const mapDispatchToProps = {
   loginWithEmailPassword,
   clearLoginDetailsProps,
+  isAuthenticatedFunc,
 };
 const mapStateToProps = ({ user }) => ({
   user,

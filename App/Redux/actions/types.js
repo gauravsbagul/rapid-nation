@@ -7,3 +7,4 @@ export const GET_OTP = 'GET_OTP';
 export const IS_AUTHENTICATED = 'IS_AUTHENTICATED';
 export const FORGOT_PASSWORD = 'FORGOT_PASSWORD';
 export const GET_USER_PROFILE = 'GET_USER_PROFILE';
+export const VERIFY_OTP = 'VERIFY_OTP';
