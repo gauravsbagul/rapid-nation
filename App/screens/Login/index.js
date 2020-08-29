@@ -1,25 +1,98 @@
-import React, { useState, useEffect } from 'react';
+import { Button, Icon } from 'native-base';
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
+  Alert,
   Dimensions,
   Image,
+  Text,
+  TextInput,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import { Icon, Button } from 'native-base';
-import Styles from './Styles';
 import { connect } from 'react-redux';
-import { loginWithEmailPassword } from '../../Redux/actions/Auth/userActions';
+import {
+  clearLoginDetailsProps,
+  loginWithEmailPassword,
+} from '../../Redux/actions/Auth/userActions';
+import Styles from './Styles';
+
+const emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const { width, height } = Dimensions.get('window');
 
 const Login = (props) => {
-  console.log('Login -> props', props);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
-    console.log('Login -> props', props);
+    if (props.navigation.isFocused()) {
+      if (props.user?.loginResponse) {
+        if (
+          !props.user?.loginResponse?.error &&
+          props.user?.loginResponse?.response?.response
+        ) {
+          setIsLoading(false);
+          if (!props.user?.loginResponse?.response?.status) {
+            Alert.alert(
+              ``,
+              props.user?.loginResponse?.response?.response,
+              [
+                {
+                  text: 'OK',
+                  onPress: () => props.clearLoginDetailsProps(),
+                },
+              ],
+              {
+                cancelable: false,
+              },
+            );
+          } else {
+          }
+        } else {
+          Alert.alert(
+            ``,
+            'Something went wrong, please try again!',
+            [{ text: 'OK' }],
+            {
+              cancelable: false,
+            },
+          );
+        }
+      }
+    }
   }, [props]);
+
+  const onLogin = () => {
+    if (!email || !password || !phone) {
+      Alert.alert('', 'Empty field is not allowed', [{ text: 'OK' }], {
+        cancelable: false,
+      });
+      return false;
+    } else if (isNaN(email)) {
+      if (!emailReg.test(email.trim())) {
+        Alert.alert('', 'Please enter valid EmailID', [{ text: 'OK' }], {
+          cancelable: false,
+        });
+        return false;
+      } else if (email && password && phone) {
+        setIsLoading(true);
+        props.loginWithEmailPassword({ email, password });
+      }
+    } else if (!isNaN(email) && phone.length != 10) {
+      Alert.alert('', 'Please enter valid Phone Number', [{ text: 'OK' }], {
+        cancelable: false,
+      });
+      return false;
+    } else {
+      if (email && password && phone) {
+        setIsLoading(true);
+        props.loginWithEmailPassword({ password, phone });
+      }
+    }
+  };
 
   return (
     <View
@@ -106,8 +179,11 @@ const Login = (props) => {
             />
             <TextInput
               style={{ marginLeft: 10, width: '90%' }}
-              // onChangeText={text => onChangeText(text)}
-              // value={null}
+              onChangeText={(text) => {
+                setEmail(text);
+                setPhone(text);
+              }}
+              value={email || phone}
               placeholder={'Email / Phone Number'}
             />
           </View>
@@ -121,8 +197,8 @@ const Login = (props) => {
             />
             <TextInput
               style={{ marginLeft: 10, width: '90%' }}
-              // onChangeText={text => onChangeText(text)}
-              // value={null}
+              onChangeText={(text) => setPassword(text)}
+              value={password}
               placeholder={'Password'}
               secureTextEntry={true}
             />
@@ -155,9 +231,7 @@ const Login = (props) => {
             justifyContent: 'center',
             backgroundColor: '#0D83EE',
           }}
-          onPress={() => {
-            props.navigation.navigate('SelectLocation');
-          }}>
+          onPress={() => onLogin()}>
           <Text style={{ color: '#fff' }}>Login</Text>
         </Button>
         <View
@@ -235,7 +309,10 @@ const Login = (props) => {
 
 const mapDispatchToProps = {
   loginWithEmailPassword,
+  clearLoginDetailsProps,
 };
-const mapStateToProps = (state) => ({});
+const mapStateToProps = ({ user }) => ({
+  user,
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

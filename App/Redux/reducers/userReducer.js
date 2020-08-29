@@ -1,8 +1,10 @@
 import {
+  FETCH_USER,
+  FORGOT_PASSWORD,
+  GET_OTP,
+  IS_AUTHENTICATED,
   LOGIN_SUCCESS,
   REGISTER_SUCCESS,
-  FETCH_USER,
-  GET_OTP,
 } from '../actions/types';
 
 const initialState = {
@@ -15,9 +17,7 @@ export default function (state = initialState, action) {
     case LOGIN_SUCCESS:
       return {
         ...state,
-        user: payload,
-        isAuthenticated: true,
-        loading: false,
+        loginResponse: payload,
       };
       break;
     case REGISTER_SUCCESS: {
@@ -30,16 +30,22 @@ export default function (state = initialState, action) {
       return {
         ...state,
         otpResposnse: payload,
-        isAuthenticated: true,
-        loading: false,
       };
     }
     case FETCH_USER:
       return {
         ...state,
         user: payload,
-        isAuthenticated: true,
-        loading: false,
+      };
+    case IS_AUTHENTICATED:
+      return {
+        ...state,
+        isAuthenticated: payload,
+      };
+    case FORGOT_PASSWORD:
+      return {
+        ...state,
+        forgotPassword: payload,
       };
     default:
       return state;

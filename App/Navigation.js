@@ -1,61 +1,49 @@
-import 'react-native-gesture-handler';
-import React, { useEffect, useState } from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-  Image,
-  Dimensions,
-} from 'react-native';
-import { Icon } from 'native-base';
-
-import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import Login from '@View/Login';
 import ForgotPassword from '@View/Login/ForgotPassword';
 import ForgotPasswordOtp from '@View/Login/ForgotPasswordOtp';
 import SetNewPassword from '@View/Login/SetNewPassword';
-import Signup from '@View/Signup';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 import SelectLocation from '@View/SelectLocation';
-import Home from './screens/Home';
+import Signup from '@View/Signup';
+import { Icon } from 'native-base';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, Image, StatusBar, Text, View } from 'react-native';
+import 'react-native-gesture-handler';
 import { connect } from 'react-redux';
-import { fetchUser } from './Redux/actions/Auth/userActions';
 import { colors } from './Asset/colors/colors';
-import Order from './screens/Order';
-import ScanAndPay from './screens/ScanAndPay';
-import Favorite from './screens/Favorite';
+import { fetchUser } from './Redux/actions/Auth/userActions';
 import Account from './screens/Account';
 import AllHomeServices from './screens/AllHomeServices';
-import MessagesAndCheckup from './screens/MessagesAndCheckup';
-import ReadMoreReview from './screens/ReadMoreReview';
-import MessagePcakgeDetails from './screens/MessagePcakgeDetails';
+import Blog from './screens/Blog';
 import Cart from './screens/Cart';
-import Location from './screens/Location';
-import Schedule from './screens/Shedule';
 import Checkout from './screens/Checkout';
+import ExploreServiceCityWise from './screens/ExploreServiceCityWise';
+import Faqs from './screens/Faqs';
+import Favorite from './screens/Favorite';
+import Home from './screens/Home';
+import Invoice from './screens/Invoice';
+import JoinUs from './screens/JoinUs';
+import Location from './screens/Location';
+import MessagePcakgeDetails from './screens/MessagePcakgeDetails';
+import MessagesAndCheckup from './screens/MessagesAndCheckup';
+import MyOrder from './screens/MyOrder';
+import MyOrderComplete from './screens/MyOrderComplete';
+import MyOrderDetail from './screens/MyOrderDetail';
 import MyProfile from './screens/MyProfile';
 import MyWallet from './screens/MyWallet';
-import MyOrder from './screens/MyOrder';
-import MyOrderDetail from './screens/MyOrderDetail';
-import Subscription from './screens/Subscription';
 import Notification from './screens/Notification';
-import ReferAndEarn from './screens/ReferAndEarn';
-import Blog from './screens/Blog';
-import Support from './screens/Support';
-import ServiceArea from './screens/ServiceArea';
 import Offers from './screens/Offers';
-import Faqs from './screens/Faqs';
 import PrivacyPolicy from './screens/PrivacyPolicy';
 import RateUs from './screens/RateUs';
-import JoinUs from './screens/JoinUs';
-import ExploreServiceCityWise from './screens/ExploreServiceCityWise';
-import Invoice from './screens/Invoice';
-import MyOrderComplete from './screens/MyOrderComplete';
+import ReadMoreReview from './screens/ReadMoreReview';
+import ReferAndEarn from './screens/ReferAndEarn';
+import ScanAndPay from './screens/ScanAndPay';
+import ServiceArea from './screens/ServiceArea';
+import Schedule from './screens/Shedule';
+import Subscription from './screens/Subscription';
+import Support from './screens/Support';
 
 const { width, height } = Dimensions.get('window');
 
@@ -245,11 +233,7 @@ const UserScreens = () => {
 
 function AuthStack() {
   return (
-    <Stack.Navigator
-      initialRouteName="Login"
-      headerMode="none"
-      // mode="modal"
-    >
+    <Stack.Navigator initialRouteName="Login" headerMode="none">
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="ForgotPasswordOtp" component={ForgotPasswordOtp} />
@@ -265,28 +249,17 @@ const Navigation = ({ isAuthenticated, fetchUser }) => {
   const [isLoad, setIsLoad] = useState(true);
   useEffect(() => {
     fetchUser();
-    // setTimeout(() => {
-    //   setIsLoad(false);
-    //   StatusBar.setBackgroundColor("#F9F9F9", true);
-    //   StatusBar.setBarStyle("dark-content", true);
-    // }, 1000);
   }, []);
-
-  // if (isLoad) {
-  //   <SlasScrine />
-  // }
 
   return (
     <>
       <StatusBar backgroundColor={colors.white} barStyle="dark-content" />
       <NavigationContainer>
-        {isAuthenticated.isAuthenticated ? <UserScreens /> : <AuthStack />}
+        {!isAuthenticated.isAuthenticated ? <UserScreens /> : <AuthStack />}
       </NavigationContainer>
     </>
   );
 };
-
-const styles = StyleSheet.create({});
 
 const mapStateToProps = ({ user: isAuthenticated }) => ({
   isAuthenticated,

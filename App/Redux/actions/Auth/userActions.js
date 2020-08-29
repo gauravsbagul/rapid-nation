@@ -1,10 +1,16 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
-import { FETCH_USER, LOGIN_SUCCESS, GET_OTP, REGISTER_SUCCESS } from '../types';
+import {
+  FETCH_USER,
+  GET_OTP,
+  IS_AUTHENTICATED,
+  LOGIN_SUCCESS,
+  REGISTER_SUCCESS,
+} from '../types';
 
 const API = 'https://portal.rapidnation.in/customer/';
 
-//To loginWithEmailPassword
+//To signUp
 export const signUp = (data) => {
   return async (dispatch, getState) => {
     try {
@@ -14,7 +20,6 @@ export const signUp = (data) => {
         data,
       };
       const response = await axios(body);
-      console.log('response loginWithEmailPassword ', response);
 
       //Dispatch User Token
       dispatch({
@@ -22,8 +27,6 @@ export const signUp = (data) => {
         payload: { response: response?.data, error: false },
       });
     } catch (error) {
-      console.log('signUp -> error', error);
-      console.log('signUp -> error?.response', error?.response);
       //Catch Login Error
       dispatch({
         type: REGISTER_SUCCESS,
@@ -33,13 +36,13 @@ export const signUp = (data) => {
   };
 };
 
-//To clearLoginDetailsProps
-export const _clearLoginDetailsProps = () => {
+//To export const clearRegisterDetailsProps = () => {
+export const clearRegisterDetailsProps = () => {
   return (dispatch) =>
     new Promise((resolve) => {
       resolve(
         dispatch({
-          type: LOGIN_SUCCESS,
+          type: REGISTER_SUCCESS,
           payload: undefined,
         }),
       );
@@ -47,7 +50,6 @@ export const _clearLoginDetailsProps = () => {
 };
 
 export const getOTP = (phone) => {
-  console.log('getOTP -> phone', phone);
   return async (dispatch, getState) => {
     try {
       const body = {
@@ -58,7 +60,6 @@ export const getOTP = (phone) => {
         },
       };
       const response = await axios(body);
-      console.log('response getOTP ', response);
 
       //Dispatch User Token
       dispatch({
@@ -91,12 +92,90 @@ export const fetchUser = () => async (dispatch) => {
   }
 };
 
-export const register = () => (dispatch) => {
+//To loginWithEmailPassword
+export const loginWithEmailPassword = (data) => {
+  return async (dispatch, getState) => {
+    try {
+      const body = {
+        method: 'POST',
+        url: API + 'api/login',
+        data,
+      };
+      const response = await axios(body);
+
+      //Dispatch User Token
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: { response: response?.data, error: false },
+      });
+    } catch (error) {
+      //Catch Login Error
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: { response: error?.response, error: true },
+      });
+    }
+  };
+};
+
+//To clearLoginDetailsProps
+export const clearLoginDetailsProps = () => {
+  return (dispatch) =>
+    new Promise((resolve) => {
+      resolve(
+        dispatch({
+          type: LOGIN_SUCCESS,
+          payload: undefined,
+        }),
+      );
+    });
+};
+
+export const isAuthenticatedFunc = (isAuthenticated) => {
   dispatch({
-    type: LOGIN_SUCCESS,
-    payload: {
-      name: 'supriyo',
-      email: 'supriyo@gmail.com',
-    },
+    type: IS_AUTHENTICATED,
+    payload: { response: isAuthenticated, error: false },
   });
+};
+
+//To forgetPassword
+export const forgetPassword = (data) => {
+  console.log('forgetPassword -> data', data);
+  return async (dispatch, getState) => {
+    try {
+      const body = {
+        method: 'POST',
+        url: API + 'api/forgotPassword',
+        data,
+      };
+      const response = await axios(body);
+      console.log('forgetPassword -> response', response);
+
+      //Dispatch User Token
+      dispatch({
+        type: FORGOT_PASSWORD,
+        payload: { response: response?.data, error: false },
+      });
+    } catch (error) {
+      console.log('forgetPassword -> error', error);
+      //Catch Login Error
+      dispatch({
+        type: FORGOT_PASSWORD,
+        payload: { response: error?.response, error: true },
+      });
+    }
+  };
+};
+
+//To clearLoginDetailsProps
+export const clearForgetPasswordProps = () => {
+  return (dispatch) =>
+    new Promise((resolve) => {
+      resolve(
+        dispatch({
+          type: LOGINFORGOT_PASSWORD_SUCCESS,
+          payload: undefined,
+        }),
+      );
+    });
 };

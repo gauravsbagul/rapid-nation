@@ -345,9 +345,7 @@ const Signup = (props) => {
         isVisible={isModalVisible}
         swipeDirection={['down']}
         onSwipeMove={(val) => {}}
-        onSwipeComplete={() => {
-          setIsModalVisible(false);
-        }}>
+        onSwipeComplete={() => setIsModalVisible(false)}>
         <OtpVerify phone={phone} Verified={() => onVerifyOtp()} />
       </Modal>
     </View>
