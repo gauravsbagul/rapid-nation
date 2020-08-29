@@ -1,6 +1,7 @@
 import { Icon } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import {
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -8,7 +9,6 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Alert,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
@@ -18,23 +18,17 @@ import { images } from '../Asset/images/images';
 import Button from '../components/Button';
 import Header from '../components/Header';
 import {
-  getUserProfileFunc,
   clearGetUserProfileProps,
+  getUserProfileFunc,
 } from '../Redux/actions/Profile/userProfile';
 
 const MyProfile = (props) => {
   let [isModalVisible, setModalVisibility] = useState(false);
   const [myProfileData, setMyProfileData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  // {
-  //     "customerid": "5f30d296c043883adf7953bf"
-  // }
 
   useEffect(() => {
-    console.log('MyProfile -> props', props);
-    props.getUserProfileFunc({
-      customerid: '5f30d296c043883adf7953bf',
-    });
+    props.getUserProfileFunc();
     if (props.navigation.isFocused()) {
       if (props.profile?.userProfileResponse) {
         if (
@@ -57,8 +51,12 @@ const MyProfile = (props) => {
               },
             );
           } else {
+            setMyProfileData(
+              props.profile?.userProfileResponse?.response?.response,
+            );
           }
         } else {
+          props.clearGetUserProfileProps();
           Alert.alert(
             ``,
             'Something went wrong, please try again!',
@@ -72,7 +70,6 @@ const MyProfile = (props) => {
     }
     return () => {};
   }, []);
-
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.lightWhite }}>
       <Header title="My Profile" noMic />
@@ -141,7 +138,14 @@ const MyProfile = (props) => {
       <View style={{ flex: 1, paddingVertical: 15, paddingHorizontal: 7 }}>
         {/*  */}
         <View style={styles.imageContainer}>
-          <Image source={images.profile_02} style={styles.image} />
+          <Image
+            source={
+              myProfileData.avatar
+                ? { uri: myProfileData.avatar }
+                : images.profile_02
+            }
+            style={styles.image}
+          />
           <View style={styles.iconContainer}>
             <Icon
               name="camera"
@@ -154,15 +158,15 @@ const MyProfile = (props) => {
         {/* Details */}
         <View style={styles.inputLike}>
           <Icon name="user" type="FontAwesome" style={styles.icon} />
-          <Text style={AppStyles.regularText}>Jared Rice</Text>
+          <Text style={AppStyles.regularText}>{myProfileData.name}</Text>
         </View>
         <View style={styles.inputLike}>
           <Icon name="email" type="MaterialIcons" style={styles.icon} />
-          <Text style={AppStyles.regularText}>Jaredrice@gmail.com</Text>
+          <Text style={AppStyles.regularText}>{myProfileData.email}</Text>
         </View>
         <View style={styles.inputLike}>
           <Icon name="mobile-phone" type="FontAwesome" style={styles.icon} />
-          <Text style={AppStyles.regularText}>9988776655</Text>
+          <Text style={AppStyles.regularText}>{myProfileData.phone}</Text>
           <Text
             style={[
               AppStyles.smallText,
@@ -192,9 +196,7 @@ const MyProfile = (props) => {
         {/* Description */}
         <View style={styles.inputLike}>
           <Text style={[AppStyles.medium, { color: 'black', padding: 7 }]}>
-            D506 ozone every green, Harlur Main Road, PWD Quarters, 1st Sector,
-            Off Sarjapura HSR Layout, Bengaluru, Karnataka 560102, Karnataka -
-            India
+            {myProfileData.location}
           </Text>
         </View>
 
@@ -218,7 +220,6 @@ const mapDispatchToProps = {
   clearGetUserProfileProps,
 };
 const mapStateToProps = ({ profile }) => {
-  console.log('mapStateToProps -> profile', profile);
   return {
     profile,
   };
@@ -229,7 +230,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MyProfile);
 const styles = StyleSheet.create({
   modalBg: {
     backgroundColor: colors.lightWhite,
-    marginVertical: 60,
+    height: '45%',
     borderRadius: 20,
     paddingBottom: 13,
     paddingHorizontal: 5,
@@ -277,9 +278,23 @@ const styles = StyleSheet.create({
 
     elevation: 3,
   },
-  icon: { fontSize: 20, marginHorizontal: 5, marginRight: 10, color: 'grey' },
-  lockIcon: { height: 16, width: 16, marginHorizontal: 5, marginRight: 10 },
-  rightText: { marginLeft: 'auto', marginRight: 15, marginVertical: 5 },
+  icon: {
+    fontSize: 20,
+    marginHorizontal: 5,
+    marginRight: 10,
+    color: 'grey',
+  },
+  lockIcon: {
+    height: 16,
+    width: 16,
+    marginHorizontal: 5,
+    marginRight: 10,
+  },
+  rightText: {
+    marginLeft: 'auto',
+    marginRight: 15,
+    marginVertical: 5,
+  },
   input: {
     marginVertical: 8,
     width: '92%',

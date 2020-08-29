@@ -195,7 +195,7 @@ export const clearForgetPasswordProps = () => {
     new Promise((resolve) => {
       resolve(
         dispatch({
-          type: LOGINFORGOT_PASSWORD_SUCCESS,
+          type: FORGOT_PASSWORD,
           payload: undefined,
         }),
       );

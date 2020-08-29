@@ -12,8 +12,8 @@ import {
 import { connect } from 'react-redux';
 import {
   clearLoginDetailsProps,
-  loginWithEmailPassword,
   isAuthenticatedFunc,
+  loginWithEmailPassword,
 } from '../../Redux/actions/Auth/userAuth';
 import Styles from './Styles';
 
@@ -36,9 +36,9 @@ const Login = (props) => {
           !props.user?.loginResponse?.error &&
           props.user?.loginResponse?.response?.response
         ) {
-          props.clearLoginDetailsProps();
           setIsLoading(false);
           if (!props.user?.loginResponse?.response?.status) {
+            props.clearLoginDetailsProps();
             Alert.alert(
               ``,
               props.user?.loginResponse?.response?.response,
