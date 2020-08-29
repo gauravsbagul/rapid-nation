@@ -29,6 +29,9 @@ const MyProfile = (props) => {
 
   useEffect(() => {
     props.getUserProfileFunc();
+    return () => {};
+  }, []);
+  useEffect(() => {
     if (props.navigation.isFocused()) {
       if (props.profile?.userProfileResponse) {
         if (
@@ -69,7 +72,7 @@ const MyProfile = (props) => {
       }
     }
     return () => {};
-  }, []);
+  }, [props]);
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.lightWhite }}>
       <Header title="My Profile" noMic />
@@ -140,8 +143,8 @@ const MyProfile = (props) => {
         <View style={styles.imageContainer}>
           <Image
             source={
-              myProfileData.avatar
-                ? { uri: myProfileData.avatar }
+              myProfileData?.avatar
+                ? { uri: myProfileData?.avatar }
                 : images.profile_02
             }
             style={styles.image}
@@ -158,15 +161,15 @@ const MyProfile = (props) => {
         {/* Details */}
         <View style={styles.inputLike}>
           <Icon name="user" type="FontAwesome" style={styles.icon} />
-          <Text style={AppStyles.regularText}>{myProfileData.name}</Text>
+          <Text style={AppStyles.regularText}>{myProfileData?.name}</Text>
         </View>
         <View style={styles.inputLike}>
           <Icon name="email" type="MaterialIcons" style={styles.icon} />
-          <Text style={AppStyles.regularText}>{myProfileData.email}</Text>
+          <Text style={AppStyles.regularText}>{myProfileData?.email}</Text>
         </View>
         <View style={styles.inputLike}>
           <Icon name="mobile-phone" type="FontAwesome" style={styles.icon} />
-          <Text style={AppStyles.regularText}>{myProfileData.phone}</Text>
+          <Text style={AppStyles.regularText}>{myProfileData?.phone}</Text>
           <Text
             style={[
               AppStyles.smallText,
@@ -196,7 +199,7 @@ const MyProfile = (props) => {
         {/* Description */}
         <View style={styles.inputLike}>
           <Text style={[AppStyles.medium, { color: 'black', padding: 7 }]}>
-            {myProfileData.location}
+            {myProfileData?.location}
           </Text>
         </View>
 

@@ -21,7 +21,6 @@ export const signUp = (data) => {
         data,
       };
       const response = await axios(body);
-      console.log('signUp -> response', response);
       if (response) {
         getOTP(data.phone);
       }
@@ -54,7 +53,6 @@ export const clearRegisterDetailsProps = () => {
 };
 
 export const getOTP = (phone) => {
-  console.log('getOTP -> phone', phone);
   return async (dispatch, getState) => {
     try {
       const body = {
@@ -64,9 +62,7 @@ export const getOTP = (phone) => {
           phone,
         },
       };
-      console.log('getOTP -> body', body);
       const response = await axios(body);
-      console.log('getOTP -> response', response);
 
       dispatch({
         type: GET_OTP,
@@ -112,7 +108,6 @@ export const fetchUser = () => async (dispatch) => {
 
 //To loginWithEmailPassword
 export const loginWithEmailPassword = (data) => {
-  console.log('loginWithEmailPassword -> data', data);
   return async (dispatch, getState) => {
     try {
       const body = {
@@ -121,7 +116,6 @@ export const loginWithEmailPassword = (data) => {
         data,
       };
       const response = await axios(body);
-      console.log('loginWithEmailPassword -> response', response);
 
       await AsyncStorage.setItem('userDetails', JSON.stringify(response?.data));
 
@@ -130,7 +124,6 @@ export const loginWithEmailPassword = (data) => {
         payload: { response: response?.data, error: false },
       });
     } catch (error) {
-      console.log('loginWithEmailPassword -> error', error);
       dispatch({
         type: LOGIN_SUCCESS,
         payload: { response: error?.response, error: true },
@@ -162,7 +155,6 @@ export const isAuthenticatedFunc = (isAuthenticated) => {
 
 //To forgetPassword
 export const forgetPassword = (data) => {
-  console.log('forgetPassword -> data', data);
   return async (dispatch, getState) => {
     try {
       const body = {
@@ -171,7 +163,6 @@ export const forgetPassword = (data) => {
         data,
       };
       const response = await axios(body);
-      console.log('forgetPassword -> response', response);
 
       //Dispatch User Token
       dispatch({
@@ -179,7 +170,6 @@ export const forgetPassword = (data) => {
         payload: { response: response?.data, error: false },
       });
     } catch (error) {
-      console.log('forgetPassword -> error', error);
       //Catch Login Error
       dispatch({
         type: FORGOT_PASSWORD,
@@ -204,7 +194,6 @@ export const clearForgetPasswordProps = () => {
 
 //To verifyOTPFunc
 export const verifyOTPFunc = (data) => {
-  console.log('verifyOTPFunc -> data', data);
   return async (dispatch, getState) => {
     try {
       const body = {
@@ -212,9 +201,7 @@ export const verifyOTPFunc = (data) => {
         url: API + 'api/verifyAccount',
         data,
       };
-      console.log('verifyOTPFunc -> body', body);
       const response = await axios(body);
-      console.log('verifyOTP -> response', response);
 
       dispatch({
         type: VERIFY_OTP,
@@ -240,4 +227,28 @@ export const clearVerifyOTPProps = () => {
         }),
       );
     });
+};
+
+//To updateProfileAvatar
+export const updateProfileAvatar = (data) => {
+  return async (dispatch, getState) => {
+    try {
+      const body = {
+        method: 'POST',
+        url: API + 'api/updateProfileImage',
+        data,
+      };
+      const response = await axios(body);
+
+      dispatch({
+        type: VERIFY_OTP,
+        payload: { response: response?.data, error: false },
+      });
+    } catch (error) {
+      dispatch({
+        type: VERIFY_OTP,
+        payload: { response: error?.response, error: true },
+      });
+    }
+  };
 };

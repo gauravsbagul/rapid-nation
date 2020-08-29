@@ -37,10 +37,7 @@ const Signup = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log(
-      'Signup -> props.user?.registerResponse',
-      props.user?.registerResponse,
-    );
+    console.log('Signup -> props.user', props.user);
     if (props.navigation.isFocused()) {
       if (props.user?.registerResponse) {
         if (
@@ -91,21 +88,17 @@ const Signup = (props) => {
       props.user?.verifyOTP?.response?.response &&
       props.user?.verifyOTP?.response?.status
     ) {
-      console.log('Signup -> props.user', props.user);
-
+      props.clearRegisterDetailsProps();
       setIsModalVisible(false);
       setVerify(true);
-      // props.isAuthenticatedFunc(true);
-      props.navigation.navigate('SelectLocation');
-    } else {
-      props.isAuthenticatedFunc(false);
+      props.navigation.navigate('Login');
     }
   }, [props]);
 
   const onVerifyOtp = (otp) => {
     console.log('onVerifyOtp -> otp', otp);
     props.verifyOTPFunc({
-      phone: '9604374093',
+      phone: phone,
       otp: '1234',
     });
   };

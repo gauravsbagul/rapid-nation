@@ -29,7 +29,6 @@ const Login = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log('Login -> props.user', props.user);
     if (props.navigation.isFocused()) {
       if (props.user?.loginResponse) {
         if (
@@ -70,17 +69,12 @@ const Login = (props) => {
   }, [props]);
 
   const onLogin = () => {
-    console.log('onLogin -> phone', phone);
-    console.log('onLogin -> password', password);
-    console.log('onLogin -> email', email);
-
     if (!email || !password || !phone) {
       Alert.alert('', 'Empty field is not allowed', [{ text: 'OK' }], {
         cancelable: false,
       });
       return false;
     } else if (isNaN(email)) {
-      console.log('onLogin -> email', email);
       if (!emailReg.test(email.trim())) {
         Alert.alert('', 'Please enter valid EmailID', [{ text: 'OK' }], {
           cancelable: false,

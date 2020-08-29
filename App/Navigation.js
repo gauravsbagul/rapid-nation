@@ -245,8 +245,6 @@ function AuthStack() {
 }
 
 const Navigation = ({ isAuthenticated, fetchUser }) => {
-  console.log('Navigation -> isAuthenticated', isAuthenticated);
-  const [isLoad, setIsLoad] = useState(true);
   useEffect(() => {
     fetchUser();
   }, []);
@@ -255,7 +253,11 @@ const Navigation = ({ isAuthenticated, fetchUser }) => {
     <>
       <StatusBar backgroundColor={colors.white} barStyle="dark-content" />
       <NavigationContainer>
-        {isAuthenticated.isAuthenticated ? <UserScreens /> : <AuthStack />}
+        {isAuthenticated?.isAuthenticated?.response ? (
+          <UserScreens />
+        ) : (
+          <AuthStack />
+        )}
       </NavigationContainer>
     </>
   );

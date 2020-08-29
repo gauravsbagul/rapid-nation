@@ -141,7 +141,7 @@ const SelectLocation = ({ navigation, login }) => {
       </View>
       <Footer style={{ backgroundColor: '#F9F9F9' }}>
         <Button
-          onPress={() => login()}
+          onPress={() => navigation.navigte('UserScreens')}
           rounded
           style={{
             width: width - 80,
