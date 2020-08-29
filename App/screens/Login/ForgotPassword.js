@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import {
   clearForgetPasswordProps,
   forgetPassword,
-} from '../../Redux/actions/Auth/userActions';
+} from '../../Redux/actions/Auth/userAuth';
 import Styles from './Styles';
 
 const { width, height } = Dimensions.get('window');

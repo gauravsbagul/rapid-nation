@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
-import { signUp, getOTP } from '../../Redux/actions/Auth/userActions';
+import { signUp, getOTP } from '../../Redux/actions/Auth/userAuth';
 import { OtpVerify } from './OtpVerify';
 import Styles from './Styles';
 

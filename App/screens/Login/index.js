@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import {
   clearLoginDetailsProps,
   loginWithEmailPassword,
-} from '../../Redux/actions/Auth/userActions';
+} from '../../Redux/actions/Auth/userAuth';
 import Styles from './Styles';
 
 const emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;

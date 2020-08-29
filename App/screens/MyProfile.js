@@ -1,22 +1,78 @@
-import React, { Fragment, useState } from 'react';
+import { Icon } from 'native-base';
+import React, { useEffect, useState } from 'react';
 import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
   Image,
   ScrollView,
+  StyleSheet,
+  Text,
   TextInput,
+  TouchableOpacity,
+  View,
+  Alert,
 } from 'react-native';
-import Header from '../components/Header';
+import Modal from 'react-native-modal';
+import { connect } from 'react-redux';
+import { AppStyles } from '../AppStyles/Styles';
 import { colors } from '../Asset/colors/colors';
 import { images } from '../Asset/images/images';
-import { Icon } from 'native-base';
-import { AppStyles } from '../AppStyles/Styles';
 import Button from '../components/Button';
-import Modal from 'react-native-modal';
-const MyProfile = () => {
+import Header from '../components/Header';
+import {
+  getUserProfileFunc,
+  clearGetUserProfileProps,
+} from '../Redux/actions/Profile/userProfile';
+
+const MyProfile = (props) => {
   let [isModalVisible, setModalVisibility] = useState(false);
+  const [myProfileData, setMyProfileData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  // {
+  //     "customerid": "5f30d296c043883adf7953bf"
+  // }
+
+  useEffect(() => {
+    console.log('MyProfile -> props', props);
+    props.getUserProfileFunc({
+      customerid: '5f30d296c043883adf7953bf',
+    });
+    if (props.navigation.isFocused()) {
+      if (props.profile?.userProfileResponse) {
+        if (
+          !props.profile?.userProfileResponse?.error &&
+          props.profile?.userProfileResponse?.response?.response
+        ) {
+          setIsLoading(false);
+          if (!props.profile?.userProfileResponse?.response?.status) {
+            Alert.alert(
+              ``,
+              props.profile?.userProfileResponse?.response?.response,
+              [
+                {
+                  text: 'OK',
+                  onPress: () => props.clearGetUserProfileProps(),
+                },
+              ],
+              {
+                cancelable: false,
+              },
+            );
+          } else {
+          }
+        } else {
+          Alert.alert(
+            ``,
+            'Something went wrong, please try again!',
+            [{ text: 'OK' }],
+            {
+              cancelable: false,
+            },
+          );
+        }
+      }
+    }
+    return () => {};
+  }, []);
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.lightWhite }}>
       <Header title="My Profile" noMic />
@@ -157,8 +213,18 @@ const MyProfile = () => {
     </ScrollView>
   );
 };
+const mapDispatchToProps = {
+  getUserProfileFunc,
+  clearGetUserProfileProps,
+};
+const mapStateToProps = ({ profile }) => {
+  console.log('mapStateToProps -> profile', profile);
+  return {
+    profile,
+  };
+};
 
-export default MyProfile;
+export default connect(mapStateToProps, mapDispatchToProps)(MyProfile);
 
 const styles = StyleSheet.create({
   modalBg: {

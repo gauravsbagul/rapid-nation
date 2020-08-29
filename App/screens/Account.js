@@ -58,90 +58,18 @@ const Account = ({ navigation }) => {
             Account info
           </Text>
 
-          <View style={{ width: '100%' }}>
-            <View
-              style={{
-                height: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: 60,
-                backgroundColor: colors.white,
-                borderTopRightRadius: 8,
-              }}
-            />
-            {menuItems.map((item, key) => (
-              <View style={{ flexDirection: 'row' }} key={key}>
-                <View
-                  style={{
-                    height: 50,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: 60,
-                    backgroundColor: colors.white,
-                  }}>
-                  <Image
-                    source={item.imag}
-                    style={{ width: 20, height: 20 }}
-                    resizeMode="contain"
-                  />
-                </View>
-                <View
-                  style={{
-                    height: 50,
-                    justifyContent: 'center',
-                    width: 200,
-                  }}>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => navigation.navigate(item.title)}>
-                    <Text
-                      style={[
-                        AppStyles.semiBold,
-                        { color: 'white', marginLeft: 25, fontSize: 15 },
-                      ]}>
-                      {item.title}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            ))}
-            {/* Play Store Logo */}
-            <View style={{ flexDirection: 'row' }}>
-              <View
-                style={{
-                  height: 50,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 60,
-                  backgroundColor: colors.white,
-                }}
-              />
-              <View
-                style={{ height: 50, justifyContent: 'center', width: 200 }}>
-                <Image
-                  source={images.playstore_logo}
-                  style={{ width: 100, height: 50, marginLeft: 25 }}
-                  resizeMode="contain"
-                />
-              </View>
-            </View>
-            {/* Gap */}
-            <View style={{ flexDirection: 'row' }}>
-              <View
-                style={{
-                  height: 5,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 60,
-                  backgroundColor: colors.white,
-                }}
-              />
-              <View
-                style={{ height: 5, justifyContent: 'center', width: 200 }}
-              />
-            </View>
-
-            <View style={{ flexDirection: 'row' }}>
+          <View
+            style={{
+              height: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: 60,
+              backgroundColor: colors.white,
+              borderTopRightRadius: 8,
+            }}
+          />
+          {menuItems.map((item, key) => (
+            <View style={{ flexDirection: 'row' }} key={key}>
               <View
                 style={{
                   height: 50,
@@ -151,34 +79,100 @@ const Account = ({ navigation }) => {
                   backgroundColor: colors.white,
                 }}>
                 <Image
-                  source={images.menu_log_out}
+                  source={item.imag}
                   style={{ width: 20, height: 20 }}
                   resizeMode="contain"
                 />
               </View>
               <View
-                style={{ height: 50, justifyContent: 'center', width: 200 }}>
-                <Text
-                  style={[
-                    AppStyles.semiBold,
-                    { color: 'white', marginLeft: 25, fontSize: 15 },
-                  ]}>
-                  Log Out
-                </Text>
+                style={{
+                  height: 50,
+                  justifyContent: 'center',
+                  width: 200,
+                }}>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => navigation.navigate(item.title)}>
+                  <Text
+                    style={[
+                      AppStyles.semiBold,
+                      { color: 'white', marginLeft: 25, fontSize: 15 },
+                    ]}>
+                    {item.title}
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
-
+          ))}
+          {/* Play Store Logo */}
+          <View style={{ flexDirection: 'row' }}>
             <View
               style={{
-                height: 10,
+                height: 50,
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: 60,
                 backgroundColor: colors.white,
-                borderBottomRightRadius: 8,
               }}
             />
+            <View style={{ height: 50, justifyContent: 'center', width: 200 }}>
+              <Image
+                source={images.playstore_logo}
+                style={{ width: 100, height: 50, marginLeft: 25 }}
+                resizeMode="contain"
+              />
+            </View>
           </View>
+          {/* Gap */}
+          <View style={{ flexDirection: 'row' }}>
+            <View
+              style={{
+                height: 5,
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 60,
+                backgroundColor: colors.white,
+              }}
+            />
+            <View style={{ height: 5, justifyContent: 'center', width: 200 }} />
+          </View>
+
+          <View style={{ flexDirection: 'row' }}>
+            <View
+              style={{
+                height: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 60,
+                backgroundColor: colors.white,
+              }}>
+              <Image
+                source={images.menu_log_out}
+                style={{ width: 20, height: 20 }}
+                resizeMode="contain"
+              />
+            </View>
+            <View style={{ height: 50, justifyContent: 'center', width: 200 }}>
+              <Text
+                style={[
+                  AppStyles.semiBold,
+                  { color: 'white', marginLeft: 25, fontSize: 15 },
+                ]}>
+                Log Out
+              </Text>
+            </View>
+          </View>
+
+          <View
+            style={{
+              height: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: 60,
+              backgroundColor: colors.white,
+              borderBottomRightRadius: 8,
+            }}
+          />
           {/* Menu */}
 
           {/* <View style={{ position: 'absolute', height: height * 6 / 5, width: height * 6 / 5, borderColor: 'rgba(255,255,255,.1)', borderWidth: 25, borderRadius: 1000, translateX: width - 250, translateY: -130 }} />

@@ -13,7 +13,7 @@ import { Dimensions, Image, StatusBar, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
 import { connect } from 'react-redux';
 import { colors } from './Asset/colors/colors';
-import { fetchUser } from './Redux/actions/Auth/userActions';
+import { fetchUser } from './Redux/actions/Auth/userAuth';
 import Account from './screens/Account';
 import AllHomeServices from './screens/AllHomeServices';
 import Blog from './screens/Blog';

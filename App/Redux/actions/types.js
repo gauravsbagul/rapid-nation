@@ -6,3 +6,4 @@ export const END_LOADING = 'END_LOADING';
 export const GET_OTP = 'GET_OTP';
 export const IS_AUTHENTICATED = 'IS_AUTHENTICATED';
 export const FORGOT_PASSWORD = 'FORGOT_PASSWORD';
+export const GET_USER_PROFILE = 'GET_USER_PROFILE';
