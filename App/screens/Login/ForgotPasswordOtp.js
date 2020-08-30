@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,40 @@ import Styles from './Styles';
 
 const { width, height } = Dimensions.get('window');
 
-const ForgotPasswordOtp = ({ navigation }) => {
+const ForgotPasswordOtp = (props) => {
+  const { navigation } = props;
+  const [otp, setOtp] = useState([]);
+  const { onVerifyOtp, phone } = props;
+  const inputRef1 = useRef(null);
+  const inputRef2 = useRef(null);
+  const inputRef3 = useRef(null);
+
+  const verifyOTP = (props) => {
+    if (otp.length != 4) {
+      Alert.alert(``, 'Please 4 digit OTP', [{ text: 'OK' }], {
+        cancelable: false,
+      });
+    } else {
+      //  onVerifyOtp(otp.join(''));
+      console.log("verifyOTP -> otp.join('')", otp.join(''));
+    }
+  };
+
+  const onChangeText = (value, index) => {
+    if (value.length) {
+      let tempOtp = [...otp];
+      tempOtp[index] = value;
+      setOtp(tempOtp);
+      if (index == 0) {
+        inputRef1.current.focus();
+      } else if (index == 1) {
+        inputRef2.current.focus();
+      } else if (index == 2) {
+        inputRef3.current.focus();
+      }
+    }
+  };
+
   return (
     <View
       style={{
@@ -36,27 +69,27 @@ const ForgotPasswordOtp = ({ navigation }) => {
         }}>
         <TextInput
           style={Styles.otp}
-          // onChangeText={text => onChangeText(text)}
-          // value={null}
-          // maxLength={1}
+          onChangeText={(text) => onChangeText(text, 0)}
+          maxLength={1}
+          autoFocus={true}
         />
         <TextInput
           style={Styles.otp}
-          // onChangeText={text => onChangeText(text)}
-          // value={null}
-          // placeholder={"Mobile Number"}
+          onChangeText={(text) => onChangeText(text, 1)}
+          maxLength={1}
+          ref={inputRef1}
         />
         <TextInput
           style={Styles.otp}
-          // onChangeText={text => onChangeText(text)}
-          // value={null}
-          // placeholder={"Mobile Number"}
+          onChangeText={(text) => onChangeText(text, 2)}
+          maxLength={1}
+          ref={inputRef2}
         />
         <TextInput
           style={Styles.otp}
-          // onChangeText={text => onChangeText(text)}
-          // value={null}
-          // placeholder={"Mobile Number"}
+          onChangeText={(text) => onChangeText(text, 3)}
+          maxLength={1}
+          ref={inputRef3}
         />
       </View>
 

@@ -45,7 +45,6 @@ const Signup = (props) => {
           props.user?.registerResponse?.response?.status
         ) {
           props.clearRegisterDetailsProps();
-
           setIsLoading(false);
           Alert.alert(
             ``,

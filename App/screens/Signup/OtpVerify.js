@@ -1,17 +1,14 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { Button, Container } from 'native-base';
+import React, { useRef, useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  Dimensions,
-  Image,
-  TouchableOpacity,
-  Alert,
-  StyleSheet,
+  Alert, Dimensions,
+
+
+
+  StyleSheet, Text,
+  TextInput, View
 } from 'react-native';
-import { Icon, Button, Container } from 'native-base';
 import Styles from './Styles';
-import Modal from 'react-native-modal';
 
 const { width, height } = Dimensions.get('window');
 
@@ -77,25 +74,25 @@ export const OtpVerify = (props) => {
             paddingVertical: 10,
           }}>
           <TextInput
-            style={styles.otp}
+            style={Styles.otp}
             onChangeText={(text) => onChangeText(text, 0)}
             maxLength={1}
             autoFocus={true}
           />
           <TextInput
-            style={styles.otp}
+            style={Styles.otp}
             onChangeText={(text) => onChangeText(text, 1)}
             maxLength={1}
             ref={inputRef1}
           />
           <TextInput
-            style={styles.otp}
+            style={Styles.otp}
             onChangeText={(text) => onChangeText(text, 2)}
             maxLength={1}
             ref={inputRef2}
           />
           <TextInput
-            style={styles.otp}
+            style={Styles.otp}
             onChangeText={(text) => onChangeText(text, 3)}
             maxLength={1}
             ref={inputRef3}
@@ -130,14 +127,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     height: '50%',
   },
-  otp: {
-    borderWidth: 0.5,
-    borderColor: '#aaa',
-    width: 40,
-    height: 40,
-    textAlign: 'center',
-    borderRadius: 10,
-  },
+
   button: {
     width: '100%',
     marginTop: 20,

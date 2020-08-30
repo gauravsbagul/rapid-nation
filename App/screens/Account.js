@@ -1,23 +1,27 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import {
+  Alert,
+  Dimensions,
+  Image,
+  ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
-  View,
-  Dimensions,
-  ScrollView,
-  Image,
-  StatusBar,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import Header from '../components/Header';
 import LinearGradient from 'react-native-linear-gradient';
-import { colors } from '../Asset/colors/colors';
+import { connect } from 'react-redux';
 import { AppStyles } from '../AppStyles/Styles';
+import { colors } from '../Asset/colors/colors';
 import { images } from '../Asset/images/images';
-
+import { logout } from '../Redux/actions/Auth/userAuth';
 const { width, height } = Dimensions.get('screen');
 
-const Account = ({ navigation }) => {
+const Account = (props) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const { navigation } = props;
+
   const menuItems = [
     { title: 'My Profile', imag: images.menu_profile },
     { title: 'My Wallet', imag: images.menu_my_wallet },
@@ -34,6 +38,31 @@ const Account = ({ navigation }) => {
     { title: 'Service Area', imag: images.menu_service },
     { title: 'Join Us', imag: images.menu_join_us },
   ];
+
+  useEffect(() => {
+    if (props.navigation.isFocused()) {
+      console.log('MyProfile -> props', props);
+
+      if (props.user?.logout) {
+        setIsLoading(false);
+      }
+    }
+
+    return () => {};
+  }, [props]);
+
+  const onLogout = () => {
+    setIsLoading(true);
+    Alert.alert(
+      'Hold on!',
+      'Are you sure you want to logout',
+      [{ text: 'No' }, { text: 'OK', onPress: () => props.logout() }],
+      {
+        cancelable: false,
+      },
+    );
+  };
+
   return (
     <Fragment>
       <StatusBar backgroundColor={'#585DFF'} barStyle="light-content" />
@@ -152,7 +181,9 @@ const Account = ({ navigation }) => {
                 resizeMode="contain"
               />
             </View>
-            <View style={{ height: 50, justifyContent: 'center', width: 200 }}>
+            <TouchableOpacity
+              style={{ height: 50, justifyContent: 'center', width: 200 }}
+              onPress={() => onLogout()}>
               <Text
                 style={[
                   AppStyles.semiBold,
@@ -160,7 +191,7 @@ const Account = ({ navigation }) => {
                 ]}>
                 Log Out
               </Text>
-            </View>
+            </TouchableOpacity>
           </View>
 
           <View
@@ -182,8 +213,16 @@ const Account = ({ navigation }) => {
     </Fragment>
   );
 };
+const mapDispatchToProps = {
+  logout,
+};
+const mapStateToProps = ({ user }) => {
+  return {
+    user,
+  };
+};
 
-export default Account;
+export default connect(mapStateToProps, mapDispatchToProps)(Account);
 
 const styles = StyleSheet.create({
   bigCircle: {

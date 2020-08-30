@@ -2,12 +2,13 @@ import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import {
   FETCH_USER,
+  FORGOT_PASSWORD,
   GET_OTP,
   IS_AUTHENTICATED,
   LOGIN_SUCCESS,
+  LOGOUT,
   REGISTER_SUCCESS,
   VERIFY_OTP,
-  IS_LOGGED_IN,
 } from '../types';
 
 const API = 'https://portal.rapidnation.in/customer/';
@@ -54,6 +55,7 @@ export const clearRegisterDetailsProps = () => {
 };
 
 export const getOTP = (phone) => {
+  console.log('getOTP -> phone', phone);
   return async (dispatch, getState) => {
     try {
       const body = {
@@ -64,6 +66,7 @@ export const getOTP = (phone) => {
         },
       };
       const response = await axios(body);
+      console.log('getOTP -> response', response);
 
       dispatch({
         type: GET_OTP,
@@ -153,10 +156,6 @@ export const isLoggedIn = () => {
       const userDetails = await AsyncStorage.getItem('userDetails');
       console.log('isLoggedIn -> userDetails', userDetails);
       if (userDetails) {
-        console.log(
-          'isLoggedIn -> JSON.parse(userDetails)',
-          JSON.parse(userDetails),
-        );
         isAuthenticatedFunc(true);
         dispatch({
           type: LOGIN_SUCCESS,
@@ -179,6 +178,23 @@ export const isAuthenticatedFunc = (isAuthenticated) => {
     });
 };
 
+//To logout
+export const logout = () => {
+  return async (dispatch, getState) => {
+    try {
+      await AsyncStorage.removeItem('userDetails');
+
+      isAuthenticatedFunc(false);
+      dispatch({
+        type: LOGOUT,
+        payload: { response: 'Loggedout successfully', error: false },
+      });
+    } catch (error) {
+      isAuthenticatedFunc(false);
+    }
+  };
+};
+
 //To forgetPassword
 export const forgetPassword = (data) => {
   return async (dispatch, getState) => {
@@ -190,13 +206,11 @@ export const forgetPassword = (data) => {
       };
       const response = await axios(body);
 
-      //Dispatch User Token
       dispatch({
         type: FORGOT_PASSWORD,
         payload: { response: response?.data, error: false },
       });
     } catch (error) {
-      //Catch Login Error
       dispatch({
         type: FORGOT_PASSWORD,
         payload: { response: error?.response, error: true },
@@ -205,7 +219,7 @@ export const forgetPassword = (data) => {
   };
 };
 
-//To clearLoginDetailsProps
+//To clearForgetPasswordProps
 export const clearForgetPasswordProps = () => {
   return (dispatch) =>
     new Promise((resolve) => {

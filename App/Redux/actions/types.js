@@ -11,3 +11,4 @@ export const VERIFY_OTP = 'VERIFY_OTP';
 export const CHANGE_PROFILE_PIC = 'CHANGE_PROFILE_PIC';
 export const UPDATE_ADDRESS = 'UPDATE_ADDRESS';
 export const GET_CATEGORY = 'GET_CATEGORY';
+export const LOGOUT = 'LOGOUT';

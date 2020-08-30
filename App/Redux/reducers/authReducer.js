@@ -6,6 +6,7 @@ import {
   LOGIN_SUCCESS,
   REGISTER_SUCCESS,
   VERIFY_OTP,
+  LOGOUT,
 } from '../actions/types';
 
 const initialState = {
@@ -52,6 +53,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         verifyOTP: payload,
+      };
+    case LOGOUT:
+      return {
+        state: undefined,
+        logout: payload,
       };
     default:
       return state;

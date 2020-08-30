@@ -229,6 +229,7 @@ const Login = (props) => {
       <View>
         <Button
           rounded
+          disabled={isLoading}
           style={{
             width: width - 80,
             marginTop: 30,
@@ -239,7 +240,7 @@ const Login = (props) => {
           }}
           onPress={() => onLogin()}>
           {isLoading ? (
-            <ActivityIndicator />
+            <ActivityIndicator color={'#fff'} />
           ) : (
             <Text style={{ color: '#fff' }}>Login</Text>
           )}

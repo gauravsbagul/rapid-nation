@@ -1,32 +1,30 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import { Icon, Textarea } from 'native-base';
+import React, { Fragment, useEffect, useState } from 'react';
 import {
+  Alert,
+  Dimensions,
+  FlatList,
+  Image,
+  ImageBackground,
+  ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
-  View,
-  ScrollView,
-  FlatList,
   TouchableOpacity,
-  Image,
-  StatusBar,
-  Dimensions,
-  TextInput,
-  ImageBackground,
-  Alert,
+  View,
 } from 'react-native';
-import Header from '../components/Header';
-import ImageHorizontalScroll from '../components/ImageHorizontalScroll';
-import { colors } from '../Asset/colors/colors';
-import { AppStyles } from '../AppStyles/Styles';
-import { images } from '../Asset/images/images';
-import Button from '../components/Button';
-import ReviewImageScroll from '../components/ReviewImageScroll';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
-
-import { Icon, Textarea } from 'native-base';
+import { AppStyles } from '../AppStyles/Styles';
+import { colors } from '../Asset/colors/colors';
+import { images } from '../Asset/images/images';
+import Button from '../components/Button';
+import Header from '../components/Header';
+import ImageHorizontalScroll from '../components/ImageHorizontalScroll';
+import ReviewImageScroll from '../components/ReviewImageScroll';
 import {
-  getCategory,
   clearGetCategoryProps,
+  getCategory,
 } from '../Redux/actions/Category/userCategory';
 
 const Home = (props) => {
@@ -135,7 +133,6 @@ const Home = (props) => {
         props.category?.getUserCategory?.response?.status
       )
         props.clearGetCategoryProps();
-      console.log('Home -> props', props);
       setCategory(props.category?.getUserCategory?.response?.response);
     } else if (
       props.category?.getUserCategory?.response &&
@@ -153,7 +150,6 @@ const Home = (props) => {
       );
     }
   }, [props]);
-  console.log('Home -> category', category);
 
   return (
     <Fragment>

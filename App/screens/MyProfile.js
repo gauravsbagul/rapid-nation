@@ -128,7 +128,13 @@ const MyProfile = (props) => {
           },
         );
       }
+      console.log('MyProfile -> props', props);
+
+      if (props.user?.logout) {
+        setIsLoading(false);
+      }
     }
+
     return () => {};
   }, [props]);
 
@@ -163,8 +169,6 @@ const MyProfile = (props) => {
       }
     });
   };
-  let a = JSON.stringify(myProfileData?.address);
-  console.log('MyProfile -> a', a);
 
   return (
     <Container>
