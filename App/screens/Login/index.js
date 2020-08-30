@@ -29,6 +29,7 @@ const Login = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    console.log('Login -> props', props);
     if (props.navigation.isFocused()) {
       if (props.user?.loginResponse) {
         if (

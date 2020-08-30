@@ -1,12 +1,7 @@
 import {
-  FETCH_USER,
-  FORGOT_PASSWORD,
-  GET_OTP,
-  IS_AUTHENTICATED,
-  LOGIN_SUCCESS,
-  REGISTER_SUCCESS,
-  GET_USER_PROFILE,
   CHANGE_PROFILE_PIC,
+  GET_USER_PROFILE,
+  UPDATE_ADDRESS,
 } from '../actions/types';
 
 const initialState = {
@@ -26,6 +21,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         changeProfilePic: payload,
+      };
+      break;
+    case UPDATE_ADDRESS:
+      return {
+        ...state,
+        updateAddressResponse: payload,
       };
       break;
     default:

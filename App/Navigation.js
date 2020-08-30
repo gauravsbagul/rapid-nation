@@ -13,7 +13,7 @@ import { Dimensions, Image, StatusBar, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
 import { connect } from 'react-redux';
 import { colors } from './Asset/colors/colors';
-import { fetchUser } from './Redux/actions/Auth/userAuth';
+import { fetchUser, isLoggedIn } from './Redux/actions/Auth/userAuth';
 import Account from './screens/Account';
 import AllHomeServices from './screens/AllHomeServices';
 import Blog from './screens/Blog';
@@ -244,9 +244,9 @@ function AuthStack() {
   );
 }
 
-const Navigation = ({ isAuthenticated, fetchUser }) => {
+const Navigation = ({ isAuthenticated, isLoggedIn }) => {
   useEffect(() => {
-    fetchUser();
+    isLoggedIn();
   }, []);
 
   return (
@@ -263,8 +263,13 @@ const Navigation = ({ isAuthenticated, fetchUser }) => {
   );
 };
 
+const mapDispatchToProps = {
+  fetchUser,
+  isLoggedIn,
+};
+
 const mapStateToProps = ({ user: isAuthenticated }) => ({
   isAuthenticated,
 });
 
-export default connect(mapStateToProps, { fetchUser })(Navigation);
+export default connect(mapStateToProps, mapDispatchToProps)(Navigation);

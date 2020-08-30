@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GET_USER_PROFILE, CHANGE_PROFILE_PIC } from '../types';
+import { GET_USER_PROFILE, CHANGE_PROFILE_PIC, UPDATE_ADDRESS } from '../types';
 
 const API = 'https://portal.rapidnation.in/customer/';
 
@@ -80,6 +80,47 @@ export const clearUploadProfilePicProps = () => {
       resolve(
         dispatch({
           type: CHANGE_PROFILE_PIC,
+          payload: undefined,
+        }),
+      );
+    });
+};
+
+//To updateAddress
+export const updateAddress = (address) => {
+  return async (dispatch, getState) => {
+    try {
+      const { loginResponse } = getState().user;
+      const body = {
+        method: 'POST',
+        url: API + 'api/updateAddress',
+        data: {
+          customerid: loginResponse?.response?.response?.customerid,
+          address,
+        },
+      };
+      const response = await axios(body);
+
+      dispatch({
+        type: UPDATE_ADDRESS,
+        payload: { response: response?.data, error: false },
+      });
+    } catch (error) {
+      dispatch({
+        type: UPDATE_ADDRESS,
+        payload: { response: error?.response, error: true },
+      });
+    }
+  };
+};
+
+//To  clearUpdateAddressProps
+export const clearUpdateAddressProps = () => {
+  return (dispatch) =>
+    new Promise((resolve) => {
+      resolve(
+        dispatch({
+          type: UPDATE_ADDRESS,
           payload: undefined,
         }),
       );

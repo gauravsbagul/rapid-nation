@@ -1,10 +1,9 @@
-import { Icon } from 'native-base';
+import { Container, Content, Icon } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
   Image,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -21,8 +20,10 @@ import Button from '../components/Button';
 import Header from '../components/Header';
 import {
   clearGetUserProfileProps,
+  clearUpdateAddressProps,
   clearUploadProfilePicProps,
   getUserProfileFunc,
+  updateAddress,
   uploadProfilePic,
 } from '../Redux/actions/Profile/userProfile';
 
@@ -32,6 +33,8 @@ const MyProfile = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAvtarLoading, setIsAvtarLoading] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState(null);
+  const [newAddress, setNewAddress] = useState('');
+  const [showAddressInput, setShowAddressInput] = useState(false);
 
   useEffect(() => {
     props.getUserProfileFunc();
@@ -39,6 +42,10 @@ const MyProfile = (props) => {
   }, []);
   useEffect(() => {
     if (props.navigation.isFocused()) {
+      console.log(
+        'MyProfile -> props.profile?.userProfileResponse',
+        props.profile?.userProfileResponse,
+      );
       if (props.profile?.userProfileResponse) {
         if (
           !props.profile?.userProfileResponse?.error &&
@@ -94,6 +101,33 @@ const MyProfile = (props) => {
           },
         );
       }
+      if (
+        props.profile?.updateAddressResponse?.response &&
+        props.profile?.updateAddressResponse?.response?.status
+      ) {
+        props.clearUpdateAddressProps();
+        props.getUserProfileFunc();
+        setShowAddressInput(false);
+        Alert.alert(
+          ``,
+          props.profile?.updateAddressResponse?.response?.message,
+          [{ text: 'OK' }],
+          {
+            cancelable: false,
+          },
+        );
+      } else if (props.profile?.updateAddressResponse) {
+        props.clearUpdateAddressProps();
+        setShowAddressInput(false);
+        Alert.alert(
+          ``,
+          'Something went wrong, please try again!',
+          [{ text: 'OK' }],
+          {
+            cancelable: false,
+          },
+        );
+      }
     }
     return () => {};
   }, [props]);
@@ -129,156 +163,189 @@ const MyProfile = (props) => {
       }
     });
   };
+  let a = JSON.stringify(myProfileData?.address);
+  console.log('MyProfile -> a', a);
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: colors.lightWhite }}>
+    <Container>
       <Header title="My Profile" noMic />
-      <Modal
-        isVisible={isModalVisible}
-        swipeDirection={['down', 'left', 'right']}
-        onSwipeComplete={() => {
-          setModalVisibility(false);
-        }}>
-        <View style={styles.modalBg}>
-          <Text
-            style={[
-              AppStyles.semiBold,
-              { textAlign: 'center', marginTop: 20, marginBottom: 30 },
-            ]}>
-            Change Password
-          </Text>
-          <View style={styles.input}>
-            <Image
-              source={images.lock}
-              style={styles.lockIcon}
-              resizeMode="contain"
-            />
-            <TextInput
-              style={[AppStyles.regularText, { flexGrow: 1 }]}
-              placeholderTextColor="black"
-              placeholder="Old Password"
-            />
+      <Content style={{ flex: 1, backgroundColor: colors.lightWhite }}>
+        <Modal
+          isVisible={isModalVisible}
+          swipeDirection={['down', 'left', 'right']}
+          onSwipeComplete={() => {
+            setModalVisibility(false);
+          }}>
+          <View style={styles.modalBg}>
+            <Text
+              style={[
+                AppStyles.semiBold,
+                { textAlign: 'center', marginTop: 20, marginBottom: 30 },
+              ]}>
+              Change Password
+            </Text>
+            <View style={styles.input}>
+              <Image
+                source={images.lock}
+                style={styles.lockIcon}
+                resizeMode="contain"
+              />
+              <TextInput
+                style={[AppStyles.regularText, { flexGrow: 1 }]}
+                placeholderTextColor="black"
+                placeholder="Old Password"
+              />
+            </View>
+            <View style={styles.input}>
+              <Image
+                source={images.lock}
+                style={styles.lockIcon}
+                resizeMode="contain"
+              />
+              <TextInput
+                style={[AppStyles.regularText, { flexGrow: 1 }]}
+                placeholderTextColor="black"
+                placeholder="New Password"
+              />
+            </View>
+            <View style={styles.input}>
+              <Image
+                source={images.lock}
+                style={styles.lockIcon}
+                resizeMode="contain"
+              />
+              <TextInput
+                style={[AppStyles.regularText, { flexGrow: 1 }]}
+                placeholderTextColor="black"
+                placeholder="Confirm Password"
+              />
+            </View>
+
+            <Button title="Done" />
+            <View style={{ position: 'absolute', top: 10, right: 10 }}>
+              <Icon
+                onPress={() => setModalVisibility(false)}
+                style={{ color: colors.grey }}
+                name="cross"
+                type="Entypo"
+              />
+            </View>
           </View>
-          <View style={styles.input}>
-            <Image
-              source={images.lock}
-              style={styles.lockIcon}
-              resizeMode="contain"
-            />
-            <TextInput
-              style={[AppStyles.regularText, { flexGrow: 1 }]}
-              placeholderTextColor="black"
-              placeholder="New Password"
-            />
-          </View>
-          <View style={styles.input}>
-            <Image
-              source={images.lock}
-              style={styles.lockIcon}
-              resizeMode="contain"
-            />
-            <TextInput
-              style={[AppStyles.regularText, { flexGrow: 1 }]}
-              placeholderTextColor="black"
-              placeholder="Confirm Password"
-            />
+        </Modal>
+        <View style={{ flex: 1, paddingVertical: 15, paddingHorizontal: 7 }}>
+          {/*  */}
+          <View style={styles.imageContainer}>
+            {isAvtarLoading ? (
+              <ActivityIndicator style={styles.image} />
+            ) : (
+              <Image
+                source={
+                  (myProfileData?.avatar && { uri: myProfileData?.avatar }) ||
+                  selectedAvatar ||
+                  images.profile_02
+                }
+                style={styles.image}
+              />
+            )}
+            <TouchableOpacity
+              style={styles.iconContainer}
+              onPress={() => onPickImage()}>
+              <Icon
+                name="camera"
+                type="Entypo"
+                style={{ color: 'white', fontSize: 11 }}
+              />
+            </TouchableOpacity>
           </View>
 
-          <Button title="Done" />
-          <View style={{ position: 'absolute', top: 10, right: 10 }}>
-            <Icon
-              onPress={() => setModalVisibility(false)}
-              style={{ color: colors.grey }}
-              name="cross"
-              type="Entypo"
-            />
+          {/* Details */}
+          <View style={styles.inputLike}>
+            <Icon name="user" type="FontAwesome" style={styles.icon} />
+            <Text style={AppStyles.regularText}>{myProfileData?.name}</Text>
           </View>
-        </View>
-      </Modal>
-      <View style={{ flex: 1, paddingVertical: 15, paddingHorizontal: 7 }}>
-        {/*  */}
-        <View style={styles.imageContainer}>
-          {isAvtarLoading ? (
-            <ActivityIndicator style={styles.image} />
-          ) : (
+          <View style={styles.inputLike}>
+            <Icon name="email" type="MaterialIcons" style={styles.icon} />
+            <Text style={AppStyles.regularText}>{myProfileData?.email}</Text>
+          </View>
+          <View style={styles.inputLike}>
+            <Icon name="mobile-phone" type="FontAwesome" style={styles.icon} />
+            <Text style={AppStyles.regularText}>{myProfileData?.phone}</Text>
+            <Text
+              style={[
+                AppStyles.smallText,
+                { marginLeft: 'auto', marginRight: 7, color: colors.green },
+              ]}>
+              Verified
+            </Text>
+          </View>
+          <View style={styles.inputLike}>
             <Image
-              source={
-                (myProfileData?.avatar && { uri: myProfileData?.avatar }) ||
-                selectedAvatar ||
-                images.profile_02
-              }
-              style={styles.image}
+              source={images.lock}
+              style={styles.lockIcon}
+              resizeMode="contain"
             />
-          )}
+            <Text style={AppStyles.regularText}>********</Text>
+          </View>
+
           <TouchableOpacity
-            style={styles.iconContainer}
-            onPress={() => onPickImage()}>
-            <Icon
-              name="camera"
-              type="Entypo"
-              style={{ color: 'white', fontSize: 11 }}
-            />
+            activeOpacity={0.8}
+            onPress={() => setModalVisibility(true)}
+            style={styles.rightText}>
+            <Text style={[AppStyles.smallText, { color: colors.primaryBlue }]}>
+              Change Password
+            </Text>
+          </TouchableOpacity>
+
+          {/* Description */}
+          <View style={styles.inputLike}>
+            <Text style={[AppStyles.medium, { color: 'black', padding: 7 }]}>
+              {myProfileData?.address?.hasOwnProperty('home')
+                ? ''
+                : myProfileData?.address}
+            </Text>
+          </View>
+
+          {showAddressInput ? (
+            <>
+              <TextInput
+                style={styles.addressInput}
+                placeholderTextColor="black"
+                placeholder="Type you new Address here"
+                value={newAddress}
+                onChangeText={(text) => setNewAddress(text)}
+              />
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.rightText}
+                onPress={() => props.updateAddress(newAddress)}>
+                <Text
+                  style={[
+                    AppStyles.semiBold,
+                    { color: colors.primaryBlue, fontSize: 15 },
+                  ]}>
+                  {' '}
+                  Add
+                </Text>
+              </TouchableOpacity>
+            </>
+          ) : null}
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.rightText}
+            disabled={showAddressInput}
+            onPress={() => setShowAddressInput(true)}>
+            <Text
+              style={[
+                AppStyles.semiBold,
+                { color: colors.primaryBlue, fontSize: 15 },
+              ]}>
+              {' '}
+              + Add your New Address
+            </Text>
           </TouchableOpacity>
         </View>
-
-        {/* Details */}
-        <View style={styles.inputLike}>
-          <Icon name="user" type="FontAwesome" style={styles.icon} />
-          <Text style={AppStyles.regularText}>{myProfileData?.name}</Text>
-        </View>
-        <View style={styles.inputLike}>
-          <Icon name="email" type="MaterialIcons" style={styles.icon} />
-          <Text style={AppStyles.regularText}>{myProfileData?.email}</Text>
-        </View>
-        <View style={styles.inputLike}>
-          <Icon name="mobile-phone" type="FontAwesome" style={styles.icon} />
-          <Text style={AppStyles.regularText}>{myProfileData?.phone}</Text>
-          <Text
-            style={[
-              AppStyles.smallText,
-              { marginLeft: 'auto', marginRight: 7, color: colors.green },
-            ]}>
-            Verified
-          </Text>
-        </View>
-        <View style={styles.inputLike}>
-          <Image
-            source={images.lock}
-            style={styles.lockIcon}
-            resizeMode="contain"
-          />
-          <Text style={AppStyles.regularText}>********</Text>
-        </View>
-
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => setModalVisibility(true)}
-          style={styles.rightText}>
-          <Text style={[AppStyles.smallText, { color: colors.primaryBlue }]}>
-            Change Password
-          </Text>
-        </TouchableOpacity>
-
-        {/* Description */}
-        <View style={styles.inputLike}>
-          <Text style={[AppStyles.medium, { color: 'black', padding: 7 }]}>
-            {myProfileData?.location}
-          </Text>
-        </View>
-
-        <TouchableOpacity activeOpacity={0.8} style={styles.rightText}>
-          <Text
-            style={[
-              AppStyles.semiBold,
-              { color: colors.primaryBlue, fontSize: 15 },
-            ]}>
-            {' '}
-            + Add your New Address
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={{ height: 50 }} />
-    </ScrollView>
+      </Content>
+    </Container>
   );
 };
 const mapDispatchToProps = {
@@ -286,6 +353,8 @@ const mapDispatchToProps = {
   clearGetUserProfileProps,
   uploadProfilePic,
   clearUploadProfilePicProps,
+  updateAddress,
+  clearUpdateAddressProps,
 };
 const mapStateToProps = ({ profile }) => {
   return {
@@ -344,6 +413,25 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
 
+    elevation: 3,
+  },
+  addressInput: {
+    marginVertical: 8,
+    width: '92%',
+    height: 100,
+    alignSelf: 'center',
+    backgroundColor: colors.white,
+    padding: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 30,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
     elevation: 3,
   },
   icon: {

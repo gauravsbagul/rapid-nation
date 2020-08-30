@@ -7,6 +7,7 @@ import {
   LOGIN_SUCCESS,
   REGISTER_SUCCESS,
   VERIFY_OTP,
+  IS_LOGGED_IN,
 } from '../types';
 
 const API = 'https://portal.rapidnation.in/customer/';
@@ -131,7 +132,6 @@ export const loginWithEmailPassword = (data) => {
     }
   };
 };
-
 //To clearLoginDetailsProps
 export const clearLoginDetailsProps = () => {
   return (dispatch) =>
@@ -143,6 +143,32 @@ export const clearLoginDetailsProps = () => {
         }),
       );
     });
+};
+
+//To isLoggedIn
+export const isLoggedIn = () => {
+  console.log('isLoggedIn -> isLoggedIn');
+  return async (dispatch, getState) => {
+    try {
+      const userDetails = await AsyncStorage.getItem('userDetails');
+      console.log('isLoggedIn -> userDetails', userDetails);
+      if (userDetails) {
+        console.log(
+          'isLoggedIn -> JSON.parse(userDetails)',
+          JSON.parse(userDetails),
+        );
+        isAuthenticatedFunc(true);
+        dispatch({
+          type: LOGIN_SUCCESS,
+          payload: { response: JSON.parse(userDetails), error: false },
+        });
+      } else {
+        isAuthenticatedFunc(false);
+      }
+    } catch (error) {
+      isAuthenticatedFunc(false);
+    }
+  };
 };
 
 export const isAuthenticatedFunc = (isAuthenticated) => {
@@ -227,28 +253,4 @@ export const clearVerifyOTPProps = () => {
         }),
       );
     });
-};
-
-//To updateProfileAvatar
-export const updateProfileAvatar = (data) => {
-  return async (dispatch, getState) => {
-    try {
-      const body = {
-        method: 'POST',
-        url: API + 'api/updateProfileImage',
-        data,
-      };
-      const response = await axios(body);
-
-      dispatch({
-        type: VERIFY_OTP,
-        payload: { response: response?.data, error: false },
-      });
-    } catch (error) {
-      dispatch({
-        type: VERIFY_OTP,
-        payload: { response: error?.response, error: true },
-      });
-    }
-  };
 };
