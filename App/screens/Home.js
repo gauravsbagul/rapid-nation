@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -21,10 +21,28 @@ import { images } from '../Asset/images/images';
 import Button from '../components/Button';
 import ReviewImageScroll from '../components/ReviewImageScroll';
 import Modal from 'react-native-modal';
-import { Icon, Textarea } from 'native-base';
+import { connect } from 'react-redux';
 
-const Home = ({ navigation }) => {
+import { Icon, Textarea } from 'native-base';
+import {
+  getCategory,
+  clearGetCategoryProps,
+} from '../Redux/actions/Category/userCategory';
+
+const Home = (props) => {
+  const { navigation } = props;
   const [isServiceModalVisible, setServiceModalVisible] = useState(false);
+  const [category, setCategory] = useState([
+    { name: 'Electrical', image: images.plug },
+    { name: 'Service', image: images.customer },
+    { name: 'Real State', image: images.building },
+    { name: 'Pet Services', image: images.pet },
+    { name: 'Interior Design', image: images.plan },
+    { name: 'Transport Pick & Drop etc.', image: images.shipped },
+    { name: 'Painting', image: images.paint },
+    { name: 'Computer Repair', image: images.computer },
+    { name: 'Plumbing', image: images.water },
+  ]);
 
   const toggleServiceModal = () => {
     setServiceModalVisible(!isServiceModalVisible);
@@ -63,17 +81,6 @@ const Home = ({ navigation }) => {
     },
   ]);
 
-  let services = [
-    { name: 'Electrical', image: images.plug },
-    { name: 'Service', image: images.customer },
-    { name: 'Real State', image: images.building },
-    { name: 'Pet Services', image: images.pet },
-    { name: 'Interior Design', image: images.plan },
-    { name: 'Transport Pick & Drop etc.', image: images.shipped },
-    { name: 'Painting', image: images.paint },
-    { name: 'Computer Repair', image: images.computer },
-    { name: 'Plumbing', image: images.water },
-  ];
   let frequentlyUsed = [
     { name: 'Home Renovation', image: images.home_renovation },
     { name: 'Charted Account', image: images.group },
@@ -115,6 +122,39 @@ const Home = ({ navigation }) => {
     { name: 'Pune', image: images.pune },
     { name: 'Delhi', image: images.delhi },
   ];
+
+  useEffect(() => {
+    props.getCategory();
+    return () => {};
+  }, []);
+
+  useEffect(() => {
+    if (navigation.isFocused()) {
+      if (
+        props.category?.getUserCategory?.response?.response &&
+        props.category?.getUserCategory?.response?.status
+      )
+        props.clearGetCategoryProps();
+      console.log('Home -> props', props);
+      setCategory(props.category?.getUserCategory?.response?.response);
+    } else if (
+      props.category?.getUserCategory?.response &&
+      !props.category?.getUserCategory?.response?.status
+    ) {
+      props.clearGetCategoryProps();
+      Alert.alert(
+        ``,
+        props.category?.getUserCategory?.response?.response ||
+          'Something went wrong, please try again!',
+        [{ text: 'OK' }],
+        {
+          cancelable: false,
+        },
+      );
+    }
+  }, [props]);
+  console.log('Home -> category', category);
+
   return (
     <Fragment>
       <StatusBar
@@ -140,10 +180,10 @@ const Home = ({ navigation }) => {
               Please select your service category
             </Text>
           </View>
-          {/* Select Services */}
+
           <View style={{ paddingHorizontal: 4 }}>
             <FlatList
-              data={services}
+              data={category}
               keyExtractor={(_, key) => key}
               numColumns={3}
               renderItem={({ item }) => (
@@ -645,7 +685,15 @@ const Home = ({ navigation }) => {
   );
 };
 
-export default Home;
+const mapDispatchToProps = {
+  getCategory,
+  clearGetCategoryProps,
+};
+const mapStateToProps = ({ category }) => ({
+  category,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
 
 const styles = StyleSheet.create({
   searchBox: {

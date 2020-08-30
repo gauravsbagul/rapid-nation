@@ -244,7 +244,8 @@ function AuthStack() {
   );
 }
 
-const Navigation = ({ isAuthenticated, isLoggedIn }) => {
+const Navigation = ({ isAuthenticated, isLoggedIn, navigation }) => {
+  console.log('Navigation -> navigation', navigation);
   useEffect(() => {
     isLoggedIn();
   }, []);
