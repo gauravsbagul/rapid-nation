@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">rapid_nation</string>
+     <string moduleConfig="true" name="CodePushDeploymentKey">L-oNWHcyz3v3mHWQLRj9KA_PSVPBJeqBYFoBD</string>
 </resources>

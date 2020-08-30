@@ -16,6 +16,8 @@
 		1C5EFA4C24FA4DC100BCE80B /* Montserrat-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1C5EFA4724FA4DC100BCE80B /* Montserrat-Light.ttf */; };
 		1C5EFA4D24FA4DC100BCE80B /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1C5EFA4824FA4DC100BCE80B /* Montserrat-Bold.ttf */; };
 		1C5EFA4E24FA4DC100BCE80B /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1C5EFA4924FA4DC100BCE80B /* Montserrat-Regular.ttf */; };
+		1C99329424FBD85F0083B0B1 /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C99329124FBD82D0083B0B1 /* libCodePush.a */; };
+		1C99329624FBD87D0083B0B1 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C99329524FBD87D0083B0B1 /* libz.tbd */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -34,6 +36,34 @@
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = rapid_nation;
+		};
+		1C99328724FBD81D0083B0B1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C99328224FBD81D0083B0B1 /* CodePush.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = CodePush;
+		};
+		1C99328924FBD81D0083B0B1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C99328224FBD81D0083B0B1 /* CodePush.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F886647B1F4ADB500036D01B;
+			remoteInfo = "CodePush-tvOS";
+		};
+		1C99329024FBD82D0083B0B1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C99328B24FBD82D0083B0B1 /* CodePush.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = CodePush;
+		};
+		1C99329224FBD82D0083B0B1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C99328B24FBD82D0083B0B1 /* CodePush.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F886647B1F4ADB500036D01B;
+			remoteInfo = "CodePush-tvOS";
 		};
 		2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +95,9 @@
 		1C5EFA4724FA4DC100BCE80B /* Montserrat-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Light.ttf"; path = "../App/Asset/fonts/Montserrat-Light.ttf"; sourceTree = "<group>"; };
 		1C5EFA4824FA4DC100BCE80B /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Bold.ttf"; path = "../App/Asset/fonts/Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		1C5EFA4924FA4DC100BCE80B /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Regular.ttf"; path = "../App/Asset/fonts/Montserrat-Regular.ttf"; sourceTree = "<group>"; };
+		1C99328224FBD81D0083B0B1 /* CodePush.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
+		1C99328B24FBD82D0083B0B1 /* CodePush.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
+		1C99329524FBD87D0083B0B1 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		1FF15A9AF7FE44789067DE4D /* Roboto_medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_medium.ttf; path = "../node_modules/native-base/Fonts/Roboto_medium.ttf"; sourceTree = "<group>"; };
 		2CEC51A565D04310A7740CAB /* rubicon-icon-font.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "rubicon-icon-font.ttf"; path = "../node_modules/native-base/Fonts/rubicon-icon-font.ttf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* rapid_nation-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "rapid_nation-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -116,7 +149,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C99329624FBD87D0083B0B1 /* libz.tbd in Frameworks */,
 				D133D78B5D69D4D7668E845D /* libPods-rapid_nation.a in Frameworks */,
+				1C99329424FBD85F0083B0B1 /* libCodePush.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,9 +205,29 @@
 			name = rapid_nation;
 			sourceTree = "<group>";
 		};
+		1C99328324FBD81D0083B0B1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1C99328824FBD81D0083B0B1 /* libCodePush.a */,
+				1C99328A24FBD81D0083B0B1 /* libCodePush.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1C99328C24FBD82D0083B0B1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1C99329124FBD82D0083B0B1 /* libCodePush.a */,
+				1C99329324FBD82D0083B0B1 /* libCodePush.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1C99329524FBD87D0083B0B1 /* libz.tbd */,
+				1C99328224FBD81D0083B0B1 /* CodePush.xcodeproj */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				EA645E459AF8ED55C3CCDE49 /* libPods-rapid_nation.a */,
@@ -201,6 +256,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				1C99328B24FBD82D0083B0B1 /* CodePush.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -389,6 +445,16 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1C99328C24FBD82D0083B0B1 /* Products */;
+					ProjectRef = 1C99328B24FBD82D0083B0B1 /* CodePush.xcodeproj */;
+				},
+				{
+					ProductGroup = 1C99328324FBD81D0083B0B1 /* Products */;
+					ProjectRef = 1C99328224FBD81D0083B0B1 /* CodePush.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* rapid_nation */,
@@ -398,6 +464,37 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1C99328824FBD81D0083B0B1 /* libCodePush.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCodePush.a;
+			remoteRef = 1C99328724FBD81D0083B0B1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C99328A24FBD81D0083B0B1 /* libCodePush.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCodePush.a;
+			remoteRef = 1C99328924FBD81D0083B0B1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C99329124FBD82D0083B0B1 /* libCodePush.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCodePush.a;
+			remoteRef = 1C99329024FBD82D0083B0B1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C99329324FBD82D0083B0B1 /* libCodePush.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCodePush.a;
+			remoteRef = 1C99329224FBD82D0083B0B1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		00E356EC1AD99517003FC87E /* Resources */ = {

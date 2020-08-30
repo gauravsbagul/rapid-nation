@@ -7,11 +7,13 @@
     "ios": "npx react-native run-ios",
     "start": "npx react-native start",
     "prebuild": "npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
-    "build": "cd android && ./gradlew assembleDebug && cd ../",
+    "build": "npm run prebuild && cd android && ./gradlew assembleDebug && cd ../",
     "pod": "cd ios && pod install && cd ..",
     "clear": "cd android && ./gradlew clean && cd ../",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "codePushAndroid": "appcenter codepush release-react -a gauravbagul/rapid-nation -d Staging",
+    "codePushIos": "appcenter codepush release-react -a gauravbagul/rapid-nation-1 -d Staging"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.11.0",
@@ -23,6 +25,7 @@
     "native-base": "^2.13.13",
     "react": "16.13.1",
     "react-native": "0.63.2",
+    "react-native-code-push": "^6.3.0",
     "react-native-document-picker": "^3.5.4",
     "react-native-gesture-handler": "^1.7.0",
     "react-native-image-picker": "^2.3.3",
