@@ -12,56 +12,61 @@ import { images } from '../Asset/images/images';
 
 const { width, height } = Dimensions.get('screen');
 
-const ImageHorizontalScroll = () => {
+const ImageHorizontalScroll = (props) => {
   let imagesArr = [{ img: images.profile_1 }];
   let dotArr = new Array(5).fill(0);
   return (
-    <ImageBackground
-      source={images.profile_1}
-      style={{
-        width,
-        height: 226,
-        marginTop: -28,
-        zIndex: -1,
-        alignItems: 'center',
-      }}>
-      <View
+    <>
+      {props.header}
+      <ImageBackground
+        source={images.profile_1}
         style={{
-          backgroundColor: 'rgba(67,67,67,.7)',
-          marginTop: 70,
-          paddingHorizontal: 10,
-          paddingVertical: 2,
-        }}>
-        <Text style={{ ...AppStyles.smallestText, color: colors.white }}>
-          Your Trusted New and Now Good Offers
-        </Text>
-      </View>
-      <Text
-        style={{
-          ...AppStyles.semiLight,
-          marginVertical: 5,
-          color: colors.white,
-        }}>
-        Select Service
-      </Text>
-      <View
-        style={{
-          marginTop: 'auto',
-          flexDirection: 'row',
+          width,
+          height: 226,
+          marginTop: -28,
+          zIndex: -1,
           alignItems: 'center',
         }}>
-        {dotArr.map((_, index) => (
-          <View key={index} style={{ ...styles.selectBtn, marginVertical: 5 }}>
+        <View
+          style={{
+            backgroundColor: 'rgba(67,67,67,.7)',
+            marginTop: 70,
+            paddingHorizontal: 10,
+            paddingVertical: 2,
+          }}>
+          <Text style={{ ...AppStyles.smallestText, color: colors.white }}>
+            Your Trusted New and Now Good Offers
+          </Text>
+        </View>
+        <Text
+          style={{
+            ...AppStyles.semiLight,
+            marginVertical: 5,
+            color: colors.white,
+          }}>
+          Select Service
+        </Text>
+        <View
+          style={{
+            marginTop: 'auto',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          {dotArr.map((_, index) => (
             <View
-              style={[
-                { width: 7, height: 7, borderRadius: 10 },
-                { backgroundColor: index == 2 ? '#0D83EE' : '#fff' },
-              ]}
-            />
-          </View>
-        ))}
-      </View>
-    </ImageBackground>
+              key={index}
+              style={{ ...styles.selectBtn, marginVertical: 5 }}>
+              <View
+                style={[
+                  { width: 7, height: 7, borderRadius: 10 },
+                  { backgroundColor: index == 2 ? '#0D83EE' : '#fff' },
+                ]}
+              />
+            </View>
+          ))}
+        </View>
+      </ImageBackground>
+    </>
   );
 };
 

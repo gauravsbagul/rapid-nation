@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
@@ -52,6 +53,7 @@ const Login = (props) => {
               },
             );
           } else {
+            setIsLoading(false);
             props.isAuthenticatedFunc(true);
           }
         } else {
@@ -236,7 +238,11 @@ const Login = (props) => {
             backgroundColor: '#0D83EE',
           }}
           onPress={() => onLogin()}>
-          <Text style={{ color: '#fff' }}>Login</Text>
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <Text style={{ color: '#fff' }}>Login</Text>
+          )}
         </Button>
         <View
           style={{

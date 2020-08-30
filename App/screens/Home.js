@@ -161,9 +161,13 @@ const Home = (props) => {
         barStyle="light-content"
         backgroundColor={colors.header_linear_1}
       />
+
       <ScrollView style={{ flex: 1, backgroundColor: colors.lightWhite }}>
-        <Header mic text onMicPress={() => setServiceModalVisible(true)} />
-        <ImageHorizontalScroll />
+        <ImageHorizontalScroll
+          header={
+            <Header mic text onMicPress={() => setServiceModalVisible(true)} />
+          }
+        />
 
         <View style={styles.container}>
           <View
