@@ -6,6 +6,7 @@ import {
   LOGIN_SUCCESS,
   REGISTER_SUCCESS,
   GET_USER_PROFILE,
+  CHANGE_PROFILE_PIC,
 } from '../actions/types';
 
 const initialState = {
@@ -19,6 +20,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         userProfileResponse: payload,
+      };
+      break;
+    case CHANGE_PROFILE_PIC:
+      return {
+        ...state,
+        changeProfilePic: payload,
       };
       break;
     default:

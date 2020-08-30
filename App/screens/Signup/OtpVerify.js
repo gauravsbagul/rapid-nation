@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  StyleSheet,
 } from 'react-native';
 import { Icon, Button, Container } from 'native-base';
 import Styles from './Styles';
@@ -15,37 +16,40 @@ import Modal from 'react-native-modal';
 const { width, height } = Dimensions.get('window');
 
 export const OtpVerify = (props) => {
-  const [otp, setOtp] = useState('');
+  const [otp, setOtp] = useState([]);
   const { onVerifyOtp, phone } = props;
+  const inputRef1 = useRef(null);
+  const inputRef2 = useRef(null);
+  const inputRef3 = useRef(null);
 
   const verifyOTP = () => {
-    console.log('verifyOTP -> otp', otp);
-    console.log('verifyOTP -> otp.length', otp.length);
     if (otp.length != 4) {
       Alert.alert(``, 'Please 4 digit OTP', [{ text: 'OK' }], {
         cancelable: false,
       });
     } else {
-      console.log('verifyOTP -> else');
-      onVerifyOtp(otp);
+      onVerifyOtp(otp.join(''));
+    }
+  };
+
+  const onChangeText = (value, index) => {
+    if (value.length) {
+      let tempOtp = [...otp];
+      tempOtp[index] = value;
+      setOtp(tempOtp);
+      if (index == 0) {
+        inputRef1.current.focus();
+      } else if (index == 1) {
+        inputRef2.current.focus();
+      } else if (index == 2) {
+        inputRef3.current.focus();
+      }
     }
   };
 
   return (
-    <Container
-      style={{
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#0000',
-      }}>
-      <View
-        style={{
-          backgroundColor: '#fff',
-          paddingVertical: 40,
-          borderRadius: 25,
-          paddingHorizontal: 20,
-          height: '50%',
-        }}>
+    <Container style={styles.container}>
+      <View style={styles.whiteWrapper}>
         <Text
           style={[
             Styles.welcome_back,
@@ -69,69 +73,85 @@ export const OtpVerify = (props) => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'center',
-            borderBottomWidth: 1,
+            justifyContent: 'space-around',
+            paddingVertical: 10,
           }}>
           <TextInput
-            style={{ textAlign: 'center' }}
-            onChangeText={(text) => setOtp(text)}
-            value={null}
+            style={styles.otp}
+            onChangeText={(text) => onChangeText(text, 0)}
+            maxLength={1}
             autoFocus={true}
           />
           <TextInput
-            style={Styles.otp}
-            // onChangeText={text => onChangeText(text)}
-            // value={null}
-            // placeholder={"Mobile Number"}
+            style={styles.otp}
+            onChangeText={(text) => onChangeText(text, 1)}
+            maxLength={1}
+            ref={inputRef1}
           />
           <TextInput
-            style={Styles.otp}
-            // onChangeText={text => onChangeText(text)}
-            // value={null}
-            // placeholder={"Mobile Number"}
+            style={styles.otp}
+            onChangeText={(text) => onChangeText(text, 2)}
+            maxLength={1}
+            ref={inputRef2}
           />
           <TextInput
-            style={Styles.otp}
-            // onChangeText={text => onChangeText(text)}
-            // value={null}
-            // placeholder={"Mobile Number"}
+            style={styles.otp}
+            onChangeText={(text) => onChangeText(text, 3)}
+            maxLength={1}
+            ref={inputRef3}
           />
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 20,
-          }}>
+        <View style={styles.resendOption}>
           <Text style={{ color: '#B9B9B9', fontSize: 12 }}>
             If you didn't receive a code !
           </Text>
           <Text style={{ color: '#FF0000', fontSize: 12 }}>RESEND</Text>
         </View>
         <View>
-          <Button
-            rounded
-            style={{
-              width: '100%',
-              marginTop: 20,
-              height: 50,
-              flexDirection: 'row',
-              alignItems: 'center',
-              alignSelf: 'center',
-              justifyContent: 'center',
-              backgroundColor: '#0D83EE',
-            }}
-            onPress={() => verifyOTP()}>
-            <Text
-              style={{
-                color: '#fff',
-              }}>
-              Verify
-            </Text>
+          <Button rounded style={styles.button} onPress={() => verifyOTP()}>
+            <Text style={{ color: '#fff' }}>Verify</Text>
           </Button>
         </View>
       </View>
     </Container>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#0000',
+  },
+  whiteWrapper: {
+    backgroundColor: '#fff',
+    paddingVertical: 40,
+    borderRadius: 25,
+    paddingHorizontal: 20,
+    height: '50%',
+  },
+  otp: {
+    borderWidth: 0.5,
+    borderColor: '#aaa',
+    width: 40,
+    height: 40,
+    textAlign: 'center',
+    borderRadius: 10,
+  },
+  button: {
+    width: '100%',
+    marginTop: 20,
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#0D83EE',
+  },
+  resendOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+});

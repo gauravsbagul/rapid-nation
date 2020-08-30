@@ -37,7 +37,6 @@ const Signup = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log('Signup -> props.user', props.user);
     if (props.navigation.isFocused()) {
       if (props.user?.registerResponse) {
         if (
@@ -46,7 +45,6 @@ const Signup = (props) => {
           props.user?.registerResponse?.response?.status
         ) {
           props.clearRegisterDetailsProps();
-          console.log('Signup ->  props.user', props.user);
 
           setIsLoading(false);
           Alert.alert(
@@ -65,7 +63,6 @@ const Signup = (props) => {
         } else {
           setIsLoading(false);
           props.clearRegisterDetailsProps();
-          console.log('Signup -> props esle ', props);
           Alert.alert(
             ``,
             props.user?.registerResponse?.response?.response ||
@@ -82,24 +79,41 @@ const Signup = (props) => {
           );
         }
       }
-    }
-
-    if (
-      props.user?.verifyOTP?.response?.response &&
-      props.user?.verifyOTP?.response?.status
-    ) {
-      props.clearRegisterDetailsProps();
-      setIsModalVisible(false);
-      setVerify(true);
-      props.navigation.navigate('Login');
+      if (
+        props.user?.verifyOTP?.response?.response &&
+        props.user?.verifyOTP?.response?.status
+      ) {
+        props.clearRegisterDetailsProps();
+        props.clearVerifyOTPProps();
+        setIsModalVisible(false);
+        setVerify(true);
+        props.navigation.navigate('Login');
+      } else if (props.user?.verifyOTP) {
+        props.clearRegisterDetailsProps();
+        props.clearVerifyOTPProps();
+        setIsModalVisible(false);
+        setVerify(false);
+        Alert.alert(
+          ``,
+          props.user?.verifyOTP?.response?.response || 'Something went wrong!',
+          [
+            {
+              text: 'OK',
+              onPress: () => setIsModalVisible(true),
+            },
+          ],
+          {
+            cancelable: false,
+          },
+        );
+      }
     }
   }, [props]);
 
   const onVerifyOtp = (otp) => {
-    console.log('onVerifyOtp -> otp', otp);
     props.verifyOTPFunc({
-      phone: phone,
-      otp: '1234',
+      phone,
+      otp,
     });
   };
 
@@ -122,7 +136,6 @@ const Signup = (props) => {
       }
     }
   };
-  console.log('isModalVisible', isModalVisible);
 
   return (
     <View

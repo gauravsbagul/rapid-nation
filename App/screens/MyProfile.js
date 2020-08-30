@@ -1,6 +1,7 @@
 import { Icon } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Image,
   ScrollView,
@@ -10,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import ImagePicker from 'react-native-image-picker';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
 import { AppStyles } from '../AppStyles/Styles';
@@ -19,13 +21,17 @@ import Button from '../components/Button';
 import Header from '../components/Header';
 import {
   clearGetUserProfileProps,
+  clearUploadProfilePicProps,
   getUserProfileFunc,
+  uploadProfilePic,
 } from '../Redux/actions/Profile/userProfile';
 
 const MyProfile = (props) => {
   let [isModalVisible, setModalVisibility] = useState(false);
   const [myProfileData, setMyProfileData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAvtarLoading, setIsAvtarLoading] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
 
   useEffect(() => {
     props.getUserProfileFunc();
@@ -70,9 +76,60 @@ const MyProfile = (props) => {
           );
         }
       }
+
+      if (
+        props.profile?.changeProfilePic?.response &&
+        props.profile?.changeProfilePic?.response?.status
+      ) {
+        props.clearUploadProfilePicProps();
+        props.getUserProfileFunc();
+      } else if (props.profile?.changeProfilePic) {
+        props.clearUploadProfilePicProps();
+        Alert.alert(
+          ``,
+          'Something went wrong, please try again!',
+          [{ text: 'OK' }],
+          {
+            cancelable: false,
+          },
+        );
+      }
     }
     return () => {};
   }, [props]);
+
+  const onPickImage = async () => {
+    const options = {
+      title: 'Select Avatar',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    setIsAvtarLoading(true);
+    ImagePicker.showImagePicker(options, (response) => {
+      if (response.didCancel) {
+      } else if (response.error) {
+      } else if (response.customButton) {
+      } else {
+        const source = { uri: response.uri };
+        setSelectedAvatar(source);
+
+        const data = {
+          uri: response.uri,
+          name: new Date().getTime().toString(),
+          type: `image/${
+            response.type
+              ? response.type.split('/')[1]
+              : response.fileName.split('.')[1]
+          }`,
+        };
+        setIsAvtarLoading(false);
+        props.uploadProfilePic(data);
+      }
+    });
+  };
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.lightWhite }}>
       <Header title="My Profile" noMic />
@@ -141,21 +198,27 @@ const MyProfile = (props) => {
       <View style={{ flex: 1, paddingVertical: 15, paddingHorizontal: 7 }}>
         {/*  */}
         <View style={styles.imageContainer}>
-          <Image
-            source={
-              myProfileData?.avatar
-                ? { uri: myProfileData?.avatar }
-                : images.profile_02
-            }
-            style={styles.image}
-          />
-          <View style={styles.iconContainer}>
+          {isAvtarLoading ? (
+            <ActivityIndicator style={styles.image} />
+          ) : (
+            <Image
+              source={
+                (myProfileData?.avatar && { uri: myProfileData?.avatar }) ||
+                selectedAvatar ||
+                images.profile_02
+              }
+              style={styles.image}
+            />
+          )}
+          <TouchableOpacity
+            style={styles.iconContainer}
+            onPress={() => onPickImage()}>
             <Icon
               name="camera"
               type="Entypo"
               style={{ color: 'white', fontSize: 11 }}
             />
-          </View>
+          </TouchableOpacity>
         </View>
 
         {/* Details */}
@@ -221,6 +284,8 @@ const MyProfile = (props) => {
 const mapDispatchToProps = {
   getUserProfileFunc,
   clearGetUserProfileProps,
+  uploadProfilePic,
+  clearUploadProfilePicProps,
 };
 const mapStateToProps = ({ profile }) => {
   return {
