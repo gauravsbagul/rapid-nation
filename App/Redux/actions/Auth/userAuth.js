@@ -54,31 +54,27 @@ export const clearRegisterDetailsProps = () => {
     });
 };
 
-export const getOTP = (phone) => {
-  console.log('getOTP -> phone', phone);
-  return async (dispatch, getState) => {
-    try {
-      const body = {
-        method: 'POST',
-        url: API + 'api/getOTP',
-        data: {
-          phone,
-        },
-      };
-      const response = await axios(body);
-      console.log('getOTP -> response', response);
+export const getOTP = (phone) => async (dispatch) => {
+  try {
+    const body = {
+      method: 'POST',
+      url: API + 'api/getOTP',
+      data: {
+        phone: phone,
+      },
+    };
+    const response = await axios(body);
 
-      dispatch({
-        type: GET_OTP,
-        payload: { response: response?.data, error: false },
-      });
-    } catch (error) {
-      dispatch({
-        type: GET_OTP,
-        payload: { response: error?.response, error: true },
-      });
-    }
-  };
+    dispatch({
+      type: GET_OTP,
+      payload: { response: response?.data, error: false },
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_OTP,
+      payload: { response: error?.response, error: true },
+    });
+  }
 };
 
 //To clearOtpProps
@@ -150,11 +146,9 @@ export const clearLoginDetailsProps = () => {
 
 //To isLoggedIn
 export const isLoggedIn = () => {
-  console.log('isLoggedIn -> isLoggedIn');
   return async (dispatch, getState) => {
     try {
       const userDetails = await AsyncStorage.getItem('userDetails');
-      console.log('isLoggedIn -> userDetails', userDetails);
       if (userDetails) {
         isAuthenticatedFunc(true);
         dispatch({

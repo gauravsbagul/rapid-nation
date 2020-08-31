@@ -1,14 +1,6 @@
+import { Button } from 'native-base';
 import React, { useRef, useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Dimensions,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
-import { Icon, Button } from 'native-base';
-
+import { Alert, Dimensions, Text, TextInput, View } from 'react-native';
 import Styles from './Styles';
 
 const { width, height } = Dimensions.get('window');
@@ -21,14 +13,27 @@ const ForgotPasswordOtp = (props) => {
   const inputRef2 = useRef(null);
   const inputRef3 = useRef(null);
 
-  const verifyOTP = (props) => {
+  const verifyOTP = () => {
     if (otp.length != 4) {
       Alert.alert(``, 'Please 4 digit OTP', [{ text: 'OK' }], {
         cancelable: false,
       });
     } else {
-      //  onVerifyOtp(otp.join(''));
-      console.log("verifyOTP -> otp.join('')", otp.join(''));
+      console.log(
+        "verifyOTP -> otp.join('').toString()",
+        otp.join('').toString(),
+      );
+      console.log(
+        'verifyOTP -> receivedOTP.toString()',
+        props.receivedOTP.toString(),
+      );
+      if (otp.join('').toString() != props.receivedOTP.toString()) {
+        Alert.alert(``, 'Wrong OTP', [{ text: 'OK' }], {
+          cancelable: false,
+        });
+      } else {
+        onVerifyOtp(otp.join(''));
+      }
     }
   };
 
@@ -104,9 +109,7 @@ const ForgotPasswordOtp = (props) => {
             justifyContent: 'center',
             backgroundColor: '#0D83EE',
           }}
-          onPress={() => {
-            navigation.navigate('SetNewPassword');
-          }}>
+          onPress={() => verifyOTP()}>
           <Text style={{ color: '#fff' }}>Next</Text>
         </Button>
       </View>

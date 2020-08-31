@@ -4,6 +4,7 @@ import {
   ActivityIndicator,
   Alert,
   Dimensions,
+  Keyboard,
   Text,
   TextInput,
   View,
@@ -12,6 +13,8 @@ import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
 import {
   clearForgetPasswordProps,
+  clearLoginDetailsProps,
+  clearOtpProps,
   forgetPassword,
   getOTP,
 } from '../../Redux/actions/Auth/userAuth';
@@ -25,52 +28,44 @@ const ForgotPassword = (props) => {
   const [phone, setPhone] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [customerId, setCustomerId] = useState('');
+  const [receivedOTP, setReceivedOTP] = useState('');
+
   useEffect(() => {
-    console.log('ForgotPassword -> props', props);
     if (props.navigation.isFocused()) {
-      if (props.user?.forgotPassword) {
-        if (
-          !props.user?.forgotPassword?.error &&
-          props.user?.forgotPassword?.response?.response
-        ) {
-          setIsLoading(false);
-          if (!props.user?.forgotPassword?.response?.status) {
-            Alert.alert(
-              ``,
-              props.user?.forgotPassword?.response?.response,
-              [
-                {
-                  text: 'OK',
-                  onPress: () => props.clearLoginDetailsProps(),
-                },
-              ],
-              {
-                cancelable: false,
-              },
-            );
-          } else {
-            setIsLoading(false);
-            isModalVisible(true);
-          }
-        } else {
-          setIsLoading(false);
-          Alert.alert(
-            ``,
-            'Something went wrong, please try again!',
-            [{ text: 'OK' }],
-            {
-              cancelable: false,
-            },
-          );
-        }
+      if (
+        !props.user?.otpResposnse?.error &&
+        props.user?.otpResposnse?.response?.response
+      ) {
+        props.clearOtpProps();
+        setCustomerId(props.user?.otpResposnse?.response?.response?.customerid);
+        setReceivedOTP(props.user?.otpResposnse?.response?.response?.otp);
+        setIsLoading(false);
+        setIsModalVisible(true);
+      } else if (props.user?.otpResposnse) {
+        props.clearOtpProps();
+        setIsModalVisible(true);
+        setIsLoading(false);
+        Alert.alert(
+          ``,
+          'Something went wrong, please try again!',
+          [{ text: 'OK' }],
+          {
+            cancelable: false,
+          },
+        );
       }
     }
   }, [props]);
 
   const onVerifyOtp = (otp) => {
-    props.verifyOTPFunc({
-      phone,
+    setIsModalVisible(false);
+    let data = {
+      customerid: customerId,
       otp,
+    };
+    navigation.navigate('SetNewPassword', {
+      data,
     });
   };
 
@@ -88,7 +83,7 @@ const ForgotPassword = (props) => {
         return false;
       } else if (email) {
         setIsLoading(true);
-        getOTP(email);
+        props.getOTP(email);
       }
     } else if (!isNaN(email) && phone.length != 10) {
       Alert.alert('', 'Please enter valid Phone Number', [{ text: 'OK' }], {
@@ -98,7 +93,7 @@ const ForgotPassword = (props) => {
     } else {
       if (phone) {
         setIsLoading(true);
-        getOTP(phone);
+        props.getOTP(phone);
       }
     }
   };
@@ -117,7 +112,11 @@ const ForgotPassword = (props) => {
         swipeDirection={['down']}
         onSwipeMove={(val) => {}}
         onSwipeComplete={() => setIsModalVisible(false)}>
-        <ForgetPasswordOtp phone={phone} onVerifyOtp={onVerifyOtp} />
+        <ForgetPasswordOtp
+          phone={phone}
+          onVerifyOtp={onVerifyOtp}
+          receivedOTP={receivedOTP}
+        />
       </Modal>
       <Text style={Styles.welcome_back}>Forgot password</Text>
       <Text style={[Styles.login_to_continue, { paddingHorizontal: 30 }]}>
@@ -139,6 +138,8 @@ const ForgotPassword = (props) => {
             }}
             value={phone}
             placeholder={'Mobile Number'}
+            blurOnSubmit={false}
+            onSubmitEditing={() => Keyboard.dismiss()}
           />
         </View>
       </View>
@@ -169,6 +170,8 @@ const mapDispatchToProps = {
   forgetPassword,
   clearForgetPasswordProps,
   getOTP,
+  clearOtpProps,
+  clearLoginDetailsProps,
 };
 const mapStateToProps = ({ user }) => ({
   user,

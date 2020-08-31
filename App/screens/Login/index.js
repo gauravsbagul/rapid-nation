@@ -1,14 +1,15 @@
 import { Button, Icon } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Dimensions,
   Image,
+  Keyboard,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  ActivityIndicator,
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
@@ -30,7 +31,6 @@ const Login = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log('Login -> props', props);
     if (props.navigation.isFocused()) {
       if (props.user?.loginResponse) {
         if (
@@ -191,6 +191,8 @@ const Login = (props) => {
               }}
               value={email || phone}
               placeholder={'Email / Phone Number'}
+              blurOnSubmit={false}
+              onSubmitEditing={() => Keyboard.dismiss()}
             />
           </View>
         </View>
@@ -207,6 +209,8 @@ const Login = (props) => {
               value={password}
               placeholder={'Password'}
               secureTextEntry={true}
+              blurOnSubmit={false}
+              onSubmitEditing={() => Keyboard.dismiss()}
             />
           </View>
         </View>
