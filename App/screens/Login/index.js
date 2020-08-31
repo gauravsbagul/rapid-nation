@@ -24,7 +24,6 @@ const emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 const { width, height } = Dimensions.get('window');
 
 const Login = (props) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -53,6 +52,11 @@ const Login = (props) => {
               },
             );
           } else {
+            console.log(
+              'Login -> props.user?.loginResponse?.response',
+              props.user?.loginResponse?.response,
+            );
+
             setIsLoading(false);
             props.isAuthenticatedFunc(true);
           }
