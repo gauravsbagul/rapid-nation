@@ -16,7 +16,6 @@
 		1C5EFA4C24FA4DC100BCE80B /* Montserrat-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1C5EFA4724FA4DC100BCE80B /* Montserrat-Light.ttf */; };
 		1C5EFA4D24FA4DC100BCE80B /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1C5EFA4824FA4DC100BCE80B /* Montserrat-Bold.ttf */; };
 		1C5EFA4E24FA4DC100BCE80B /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1C5EFA4924FA4DC100BCE80B /* Montserrat-Regular.ttf */; };
-		1C99329424FBD85F0083B0B1 /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C99329124FBD82D0083B0B1 /* libCodePush.a */; };
 		1C99329624FBD87D0083B0B1 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C99329524FBD87D0083B0B1 /* libz.tbd */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -151,7 +150,6 @@
 			files = (
 				1C99329624FBD87D0083B0B1 /* libz.tbd in Frameworks */,
 				D133D78B5D69D4D7668E845D /* libPods-rapid_nation.a in Frameworks */,
-				1C99329424FBD85F0083B0B1 /* libCodePush.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
