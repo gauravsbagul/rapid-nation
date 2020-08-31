@@ -1,12 +1,12 @@
 import { Button, Container } from 'native-base';
 import React, { useRef, useState } from 'react';
 import {
-  Alert, Dimensions,
-
-
-
-  StyleSheet, Text,
-  TextInput, View
+  Alert,
+  Dimensions,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
 import Styles from './Styles';
 
@@ -25,7 +25,13 @@ export const OtpVerify = (props) => {
         cancelable: false,
       });
     } else {
-      onVerifyOtp(otp.join(''));
+      if (otp.join('').toString() != props.receivedOTP.toString()) {
+        Alert.alert(``, 'Wrong OTP', [{ text: 'OK' }], {
+          cancelable: false,
+        });
+      } else {
+        onVerifyOtp(otp.join(''));
+      }
     }
   };
 

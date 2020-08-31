@@ -23,13 +23,13 @@ export const signUp = (data) => {
         data,
       };
       const response = await axios(body);
-      if (response) {
-        getOTP(data.phone);
-      }
+
+      const OTPresponse = await getOTP(data.phone);
+
       //Dispatch User Token
       dispatch({
         type: REGISTER_SUCCESS,
-        payload: { response: response?.data, error: false },
+        payload: { response: response?.data, OTPresponse, error: false },
       });
     } catch (error) {
       //Catch Login Error
@@ -54,31 +54,31 @@ export const clearRegisterDetailsProps = () => {
     });
 };
 
-export const getOTP = (phone) => {
-  console.log('getOTP -> phone', phone);
-  return async (dispatch, getState) => {
-    try {
-      const body = {
-        method: 'POST',
-        url: API + 'api/getOTP',
-        data: {
-          phone,
-        },
-      };
-      const response = await axios(body);
-      console.log('getOTP -> response', response);
+//To export const clearRegisterDetailsProps = () => {
+export const clearOTPProps = () => {
+  return (dispatch) =>
+    new Promise((resolve) => {
+      resolve(
+        dispatch({
+          type: GET_OTP,
+          payload: undefined,
+        }),
+      );
+    });
+};
 
-      dispatch({
-        type: GET_OTP,
-        payload: { response: response?.data, error: false },
-      });
-    } catch (error) {
-      dispatch({
-        type: GET_OTP,
-        payload: { response: error?.response, error: true },
-      });
-    }
-  };
+export const getOTP = async (phone) => {
+  try {
+    const body = {
+      method: 'POST',
+      url: API + 'api/getOTP',
+      data: {
+        phone: phone,
+      },
+    };
+    const response = await axios(body);
+    return response?.data?.response;
+  } catch (error) {}
 };
 
 //To clearOtpProps
@@ -150,11 +150,9 @@ export const clearLoginDetailsProps = () => {
 
 //To isLoggedIn
 export const isLoggedIn = () => {
-  console.log('isLoggedIn -> isLoggedIn');
   return async (dispatch, getState) => {
     try {
       const userDetails = await AsyncStorage.getItem('userDetails');
-      console.log('isLoggedIn -> userDetails', userDetails);
       if (userDetails) {
         isAuthenticatedFunc(true);
         dispatch({
