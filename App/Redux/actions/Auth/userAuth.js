@@ -23,13 +23,13 @@ export const signUp = (data) => {
         data,
       };
       const response = await axios(body);
-      if (response) {
-        getOTP(data.phone);
-      }
+
+      const OTPresponse = await getOTP(data.phone);
+
       //Dispatch User Token
       dispatch({
         type: REGISTER_SUCCESS,
-        payload: { response: response?.data, error: false },
+        payload: { response: response?.data, OTPresponse, error: false },
       });
     } catch (error) {
       //Catch Login Error
@@ -54,7 +54,20 @@ export const clearRegisterDetailsProps = () => {
     });
 };
 
-export const getOTP = (phone) => async (dispatch) => {
+//To export const clearRegisterDetailsProps = () => {
+export const clearOTPProps = () => {
+  return (dispatch) =>
+    new Promise((resolve) => {
+      resolve(
+        dispatch({
+          type: GET_OTP,
+          payload: undefined,
+        }),
+      );
+    });
+};
+
+export const getOTP = async (phone) => {
   try {
     const body = {
       method: 'POST',
@@ -64,17 +77,8 @@ export const getOTP = (phone) => async (dispatch) => {
       },
     };
     const response = await axios(body);
-
-    dispatch({
-      type: GET_OTP,
-      payload: { response: response?.data, error: false },
-    });
-  } catch (error) {
-    dispatch({
-      type: GET_OTP,
-      payload: { response: error?.response, error: true },
-    });
-  }
+    return response?.data?.response;
+  } catch (error) {}
 };
 
 //To clearOtpProps

@@ -19,14 +19,6 @@ const ForgotPasswordOtp = (props) => {
         cancelable: false,
       });
     } else {
-      console.log(
-        "verifyOTP -> otp.join('').toString()",
-        otp.join('').toString(),
-      );
-      console.log(
-        'verifyOTP -> receivedOTP.toString()',
-        props.receivedOTP.toString(),
-      );
       if (otp.join('').toString() != props.receivedOTP.toString()) {
         Alert.alert(``, 'Wrong OTP', [{ text: 'OK' }], {
           cancelable: false,
