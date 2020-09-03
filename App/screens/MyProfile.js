@@ -247,7 +247,7 @@ const MyProfile = (props) => {
               <Image
                 source={
                   (myProfileData?.avatar && {
-                    uri: `https://portal.rapidnation.in/maincategory/${myProfileData?.avatar}`,
+                    uri: `https://portal.rapidnation.in/prfile/${myProfileData?.avatar}.png`,
                   }) ||
                   selectedAvatar ||
                   images.profile_02
