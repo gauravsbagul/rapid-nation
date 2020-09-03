@@ -28,12 +28,15 @@ import {
   getCategory,
   getSubCategory,
 } from '../Redux/actions/Category/userCategory';
+import { SelectGenderModal } from './Services/SelectgenderModal';
 
 const Home = (props) => {
   const { navigation } = props;
   const [isServiceModalVisible, setServiceModalVisible] = useState(false);
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
+  const [isGenderModalVisible, setIsGenderModalVisible] = useState(false);
+
   const toggleServiceModal = () => {
     setServiceModalVisible(!isServiceModalVisible);
   };
@@ -181,8 +184,15 @@ const Home = (props) => {
     }
   }, [props.category, props.navigation]);
 
-  const onPressOfCategory = (item) => {
-    props.getSubCategory({ category_id: item._id });
+  const onServiceSelection = (item) => {
+    if (item.title == 'Salon') {
+      setIsGenderModalVisible(true);
+      props.getSubCategory({ category_id: item._id });
+    } else {
+      Alert.alert(``, 'No Subcategory Available', [{ text: 'OK' }], {
+        cancelable: false,
+      });
+    }
   };
 
   return (
@@ -190,6 +200,10 @@ const Home = (props) => {
       <StatusBar
         barStyle="light-content"
         backgroundColor={colors.header_linear_1}
+      />
+      <SelectGenderModal
+        isGenderModalVisible={isGenderModalVisible}
+        onRequestGenderModalClose={() => setIsGenderModalVisible(false)}
       />
 
       <ScrollView style={{ flex: 1, backgroundColor: colors.lightWhite }}>
@@ -222,28 +236,18 @@ const Home = (props) => {
               numColumns={3}
               renderItem={({ item }) => (
                 <TouchableOpacity
-                  style={styles.servicesContainer}
-                  onPress={() => onPressOfCategory(item)}>
+                  style={styles.frequentlyContainer}
+                  onPress={() => onServiceSelection(item)}>
                   <Image
                     source={{
                       uri: `https://portal.rapidnation.in/maincategory/${item.image}`,
                     }}
-                    style={{
-                      height: 85,
-                      width: '100%',
-                      marginBottom: 5,
-                    }}
-                    resizeMode="contain"
+                    style={{ height: 85, width: '100%' }}
+                    resizeMode="cover"
                   />
-
-                  <Text
-                    style={{
-                      ...AppStyles.smallText,
-                      textAlign: 'center',
-                      color: 'black',
-                    }}>
-                    {item.name}
-                  </Text>
+                  <View style={{ flexGrow: 1, justifyContent: 'center' }}>
+                    <Text style={styles.frequentlyText}>{item.title}</Text>
+                  </View>
                 </TouchableOpacity>
               )}
             />
