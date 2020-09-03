@@ -128,7 +128,6 @@ const MyProfile = (props) => {
           },
         );
       }
-      console.log('MyProfile -> props', props);
 
       if (props.user?.logout) {
         setIsLoading(false);
@@ -149,8 +148,11 @@ const MyProfile = (props) => {
     setIsAvtarLoading(true);
     ImagePicker.showImagePicker(options, (response) => {
       if (response.didCancel) {
+        setIsAvtarLoading(false);
       } else if (response.error) {
+        setIsAvtarLoading(false);
       } else if (response.customButton) {
+        setIsAvtarLoading(false);
       } else {
         const source = { uri: response.uri };
         setSelectedAvatar(source);
@@ -244,7 +246,9 @@ const MyProfile = (props) => {
             ) : (
               <Image
                 source={
-                  (myProfileData?.avatar && { uri: myProfileData?.avatar }) ||
+                  (myProfileData?.avatar && {
+                    uri: `https://portal.rapidnation.in/maincategory/${myProfileData?.avatar}`,
+                  }) ||
                   selectedAvatar ||
                   images.profile_02
                 }
