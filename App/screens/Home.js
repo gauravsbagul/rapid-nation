@@ -24,24 +24,16 @@ import ImageHorizontalScroll from '../components/ImageHorizontalScroll';
 import ReviewImageScroll from '../components/ReviewImageScroll';
 import {
   clearGetCategoryProps,
+  clearGetSubCategoryProps,
   getCategory,
+  getSubCategory,
 } from '../Redux/actions/Category/userCategory';
 
 const Home = (props) => {
   const { navigation } = props;
   const [isServiceModalVisible, setServiceModalVisible] = useState(false);
-  const [category, setCategory] = useState([
-    { name: 'Electrical', image: images.plug },
-    { name: 'Service', image: images.customer },
-    { name: 'Real State', image: images.building },
-    { name: 'Pet Services', image: images.pet },
-    { name: 'Interior Design', image: images.plan },
-    { name: 'Transport Pick & Drop etc.', image: images.shipped },
-    { name: 'Painting', image: images.paint },
-    { name: 'Computer Repair', image: images.computer },
-    { name: 'Plumbing', image: images.water },
-  ]);
-
+  const [category, setCategory] = useState([]);
+  const [subCategory, setSubCategory] = useState([]);
   const toggleServiceModal = () => {
     setServiceModalVisible(!isServiceModalVisible);
   };
@@ -123,33 +115,75 @@ const Home = (props) => {
 
   useEffect(() => {
     props.getCategory();
-    return () => {};
   }, []);
 
   useEffect(() => {
-    if (navigation.isFocused()) {
+    if (props.navigation.isFocused()) {
       if (
         props.category?.getUserCategory?.response?.response &&
         props.category?.getUserCategory?.response?.status
-      )
+      ) {
+        console.log(
+          'Home -> props.category?.getUserCategory?.response?.response',
+          props.category?.getUserCategory?.response?.response,
+        );
+        setCategory(props.category?.getUserCategory?.response?.response);
         props.clearGetCategoryProps();
-      setCategory(props.category?.getUserCategory?.response?.response);
-    } else if (
-      props.category?.getUserCategory?.response &&
-      !props.category?.getUserCategory?.response?.status
-    ) {
-      props.clearGetCategoryProps();
-      Alert.alert(
-        ``,
-        props.category?.getUserCategory?.response?.response ||
-          'Something went wrong, please try again!',
-        [{ text: 'OK' }],
-        {
-          cancelable: false,
-        },
+      } else if (
+        props.category?.getUserCategory?.response &&
+        !props.category?.getUserCategory?.response?.status
+      ) {
+        props.clearGetCategoryProps();
+        Alert.alert(
+          ``,
+          props.category?.getUserCategory?.response?.response ||
+            'Something went wrong, please try again!',
+          [{ text: 'OK' }],
+          {
+            cancelable: false,
+          },
+        );
+      }
+
+      console.log(
+        'Home -> props.category?.getUserSubCategory',
+        props.category?.getUserSubCategory,
       );
+      if (
+        props.category?.getUserSubCategory?.response?.response &&
+        props.category?.getUserSubCategory?.response?.status
+      ) {
+        props.clearGetSubCategoryProps();
+        if (props.category?.getUserSubCategory?.response?.response.length) {
+          setSubCategory(
+            props.category?.getUserSubCategory?.response?.response,
+          );
+        } else {
+          Alert.alert(``, 'No Subcategory Available', [{ text: 'OK' }], {
+            cancelable: false,
+          });
+        }
+      } else if (
+        props.category?.getUserSubCategory?.response &&
+        !props.category?.getUserSubCategory?.response?.status
+      ) {
+        props.clearGetSubCategoryProps();
+        Alert.alert(
+          ``,
+          props.category?.getUserCategory?.response?.response ||
+            'Something went wrong, please try again!',
+          [{ text: 'OK' }],
+          {
+            cancelable: false,
+          },
+        );
+      }
     }
-  }, [props]);
+  }, [props.category, props.navigation]);
+
+  const onPressOfCategory = (item) => {
+    props.getSubCategory({ category_id: item._id });
+  };
 
   return (
     <Fragment>
@@ -187,12 +221,21 @@ const Home = (props) => {
               keyExtractor={(_, key) => key}
               numColumns={3}
               renderItem={({ item }) => (
-                <TouchableOpacity style={styles.servicesContainer}>
+                <TouchableOpacity
+                  style={styles.servicesContainer}
+                  onPress={() => onPressOfCategory(item)}>
                   <Image
-                    source={item.image}
-                    style={{ height: 30, marginBottom: 5 }}
+                    source={{
+                      uri: `https://portal.rapidnation.in/maincategory/${item.image}`,
+                    }}
+                    style={{
+                      height: 85,
+                      width: '100%',
+                      marginBottom: 5,
+                    }}
                     resizeMode="contain"
                   />
+
                   <Text
                     style={{
                       ...AppStyles.smallText,
@@ -688,6 +731,8 @@ const Home = (props) => {
 const mapDispatchToProps = {
   getCategory,
   clearGetCategoryProps,
+  clearGetSubCategoryProps,
+  getSubCategory,
 };
 const mapStateToProps = ({ category }) => ({
   category,
