@@ -1,21 +1,18 @@
+import { CheckBox, Icon } from 'native-base';
 import React, { Fragment, useState } from 'react';
 import {
+  Image,
+  ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
-  View,
-  ScrollView,
-  FlatList,
   TouchableOpacity,
-  Image,
-  StatusBar,
-  Dimensions,
-  TextInput,
+  View,
 } from 'react-native';
-import { colors } from '../Asset/colors/colors';
-import { AppStyles } from '../AppStyles/Styles';
-import { images } from '../Asset/images/images';
-import { Icon, CheckBox } from 'native-base';
 import Modal from 'react-native-modal';
+import { AppStyles } from '../../../AppStyles/Styles';
+import { colors } from '../../../Asset/colors/colors';
+import { images } from '../../../Asset/images/images';
 
 const MessagePcakgeDetails = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
