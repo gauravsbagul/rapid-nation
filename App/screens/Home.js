@@ -147,53 +147,8 @@ const Home = (props) => {
           },
         );
       }
-
-      console.log(
-        'Home -> props.category?.getUserSubCategory',
-        props.category?.getUserSubCategory,
-      );
-      if (
-        props.category?.getUserSubCategory?.response?.response &&
-        props.category?.getUserSubCategory?.response?.status
-      ) {
-        props.clearGetSubCategoryProps();
-        if (props.category?.getUserSubCategory?.response?.response.length) {
-          setSubCategory(
-            props.category?.getUserSubCategory?.response?.response,
-          );
-        } else {
-          Alert.alert(``, 'No Subcategory Available', [{ text: 'OK' }], {
-            cancelable: false,
-          });
-        }
-      } else if (
-        props.category?.getUserSubCategory?.response &&
-        !props.category?.getUserSubCategory?.response?.status
-      ) {
-        props.clearGetSubCategoryProps();
-        Alert.alert(
-          ``,
-          props.category?.getUserCategory?.response?.response ||
-            'Something went wrong, please try again!',
-          [{ text: 'OK' }],
-          {
-            cancelable: false,
-          },
-        );
-      }
     }
   }, [props.category, props.navigation]);
-
-  const onServiceSelection = (item) => {
-    if (item.title == 'Salon') {
-      setIsGenderModalVisible(true);
-      props.getSubCategory({ category_id: item._id });
-    } else {
-      Alert.alert(``, 'No Subcategory Available', [{ text: 'OK' }], {
-        cancelable: false,
-      });
-    }
-  };
 
   return (
     <Fragment>
@@ -237,7 +192,9 @@ const Home = (props) => {
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.frequentlyContainer}
-                  onPress={() => onServiceSelection(item)}>
+                  onPress={() =>
+                    navigation.navigate('AllHomeServices', { item })
+                  }>
                   <Image
                     source={{
                       uri: `https://portal.rapidnation.in/maincategory/${item.image}`,
@@ -352,11 +309,7 @@ const Home = (props) => {
               )}
             />
             <View style={{ marginVertical: 10 }}>
-              <Button
-                onPress={() => navigation.navigate('AllHomeServices')}
-                secondary
-                title="View All"
-              />
+              <Button onPress={() => {}} secondary title="View All" />
             </View>
           </View>
 

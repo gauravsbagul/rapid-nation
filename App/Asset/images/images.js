@@ -89,6 +89,7 @@ export const images = {
   //gender
   boy: require('../boy.png'),
   girl: require('../girl.png'),
+  couple: require('../couple.png'),
 
   //messages
   color_care: require('../color_care.png'),

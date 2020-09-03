@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GET_CATEGORY, GET_SUB_CATEGORY } from '../types';
+import { GET_CATEGORY, GET_PACKAGE_LIST, GET_SUB_CATEGORY } from '../types';
 
 const API = 'https://portal.rapidnation.in';
 
@@ -40,11 +40,6 @@ export const clearGetCategoryProps = () => {
     });
 };
 
-//To getSubCategory
-// {
-//   "category_id": "5dd693ffd4b5cb59c064a3ff",
-//     "subcategory_id": "5e1dbe1fd4bad02c35529f16"
-// }
 export const getSubCategory = (data) => {
   return async (dispatch, getState) => {
     try {
@@ -75,6 +70,39 @@ export const clearGetSubCategoryProps = () => {
       resolve(
         dispatch({
           type: GET_SUB_CATEGORY,
+          payload: undefined,
+        }),
+      );
+    });
+};
+
+export const getPackageList = () => {
+  return async (dispatch, getState) => {
+    try {
+      const body = {
+        method: 'GET',
+        url: API + '/salonPackage/packagelist',
+      };
+      const response = await axios(body);
+      dispatch({
+        type: GET_PACKAGE_LIST,
+        payload: { response: response?.data, error: false },
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_PACKAGE_LIST,
+        payload: { response: error?.response, error: true },
+      });
+    }
+  };
+};
+
+export const clearPackageListProps = () => {
+  return (dispatch) =>
+    new Promise((resolve) => {
+      resolve(
+        dispatch({
+          type: GET_PACKAGE_LIST,
           payload: undefined,
         }),
       );
