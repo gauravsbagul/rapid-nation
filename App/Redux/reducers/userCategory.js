@@ -1,4 +1,4 @@
-import { GET_CATEGORY } from '../actions/types';
+import { GET_CATEGORY, GET_SUB_CATEGORY } from '../actions/types';
 
 const initialState = {};
 
@@ -11,7 +11,12 @@ export default function (state = initialState, action) {
         getUserCategory: payload,
       };
       break;
-
+    case GET_SUB_CATEGORY:
+      return {
+        ...state,
+        getUserSubCategory: payload,
+      };
+      break;
     default:
       return state;
   }

@@ -12,3 +12,4 @@ export const CHANGE_PROFILE_PIC = 'CHANGE_PROFILE_PIC';
 export const UPDATE_ADDRESS = 'UPDATE_ADDRESS';
 export const GET_CATEGORY = 'GET_CATEGORY';
 export const LOGOUT = 'LOGOUT';
+export const GET_SUB_CATEGORY = 'GET_SUB_CATEGORY';
