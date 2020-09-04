@@ -5,6 +5,7 @@ import {
   GET_CATEGORY,
   GET_PACKAGE_LIST,
   GET_SUB_CATEGORY,
+  GET_CART,
 } from '../types';
 
 const API = 'https://portal.rapidnation.in';
@@ -179,6 +180,43 @@ export const clearAddToCartProps = () => {
       resolve(
         dispatch({
           type: ADD_TO_CART,
+          payload: undefined,
+        }),
+      );
+    });
+};
+
+export const getCart = (data) => {
+  return async (dispatch, getState) => {
+    try {
+      const { loginResponse } = getState().user;
+      data.customer_id = loginResponse?.response?.response?.customerid;
+
+      const body = {
+        method: 'POST',
+        url: API + '/cart/getCart',
+        data,
+      };
+      const response = await axios(body);
+      dispatch({
+        type: GET_CART,
+        payload: { response: response?.data, error: false },
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_CART,
+        payload: { response: error?.response, error: true },
+      });
+    }
+  };
+};
+
+export const clearGetCartProps = () => {
+  return (dispatch) =>
+    new Promise((resolve) => {
+      resolve(
+        dispatch({
+          type: GET_CART,
           payload: undefined,
         }),
       );
