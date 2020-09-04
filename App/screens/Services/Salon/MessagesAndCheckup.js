@@ -22,10 +22,10 @@ import {
 } from '../../../Redux/actions/Category/userCategory';
 const MessagesAndCheckup = (props) => {
   const { navigation } = props;
-  const [selectedItem, setselectedItem] = useState(props.route?.params?.item);
+  const [selectedItem, setSelectedItem] = useState(props.route?.params?.item);
   const [services, setServices] = useState(props.route?.params?.services);
   const [gender, setGender] = useState(props.route?.params?.gender);
-  const [type, setType] = useState('message');
+  const [type, setType] = useState(selectedItem.title);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [packageList, setPackageList] = useState([]);
   const [selectedPackage, setSelectedPackage] = useState(null);
@@ -34,13 +34,6 @@ const MessagesAndCheckup = (props) => {
     services.findIndex((item) => item._id === selectedItem._id),
   );
 
-  const messagesArray = [
-    { name: 'Makeup', image: images.cleanup_small },
-    { name: 'Massage', image: images.message_small },
-    { name: 'Threading', image: images.threading_small },
-    { name: 'Cleanup', image: images.cleanup_small },
-    { name: 'Manicure', image: images.manicure_small },
-  ];
   const packagesArray = [
     { name: 'Threading', image: images.threading_blue },
     { name: 'Massage', image: images.message_blue },
@@ -251,16 +244,19 @@ const MessagesAndCheckup = (props) => {
 
         {/* Item Scroll */}
 
-        {type == 'message' ? (
+        {type !== 'package' ? (
           <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
             style={styles.messageFlatList}
             data={services}
-            keyExtractor={(_, key) => key}
+            keyExtractor={(_, key) => key.toString()}
             renderItem={({ item, index }) => (
               <TouchableOpacity
-                onPress={() => setSelectedIndex(index)}
+                onPress={() => {
+                  setSelectedIndex(index);
+                  setSelectedItem(item);
+                }}
                 style={
                   selectedIndex == index
                     ? {
@@ -299,7 +295,7 @@ const MessagesAndCheckup = (props) => {
             horizontal
             showsHorizontalScrollIndicator={false}
             data={packagesArray}
-            keyExtractor={(_, key) => key}
+            keyExtractor={(_, key) => key.toString()}
             renderItem={({ item, index }) => (
               <View
                 style={
@@ -347,18 +343,18 @@ const MessagesAndCheckup = (props) => {
           }}>
           <TouchableOpacity
             style={
-              type == 'message'
+              type !== 'package'
                 ? styles.activeBox
                 : { marginHorizontal: 20, paddingBottom: 5 }
             }
-            onPress={() => setType('message')}>
+            onPress={() => setType(selectedItem.title)}>
             <Text
               style={
-                type == 'message'
+                type !== 'package'
                   ? { ...AppStyles.regularText, textAlign: 'center' }
                   : { ...AppStyles.medium, textAlign: 'center', color: 'black' }
               }>
-              Massage
+              {selectedItem.title}
             </Text>
           </TouchableOpacity>
           <View
@@ -385,7 +381,7 @@ const MessagesAndCheckup = (props) => {
         {/* Items */}
 
         <View style={{ marginVertical: 15, paddingHorizontal: 10 }}>
-          {type == 'message' ? (
+          {type !== 'package' ? (
             <MessagesCard
               item={{ image: images.head_shoulder }}
               packageData={packageList.length ? packageList[0] : null}
