@@ -14,3 +14,6 @@ export const GET_CATEGORY = 'GET_CATEGORY';
 export const LOGOUT = 'LOGOUT';
 export const GET_SUB_CATEGORY = 'GET_SUB_CATEGORY';
 export const GET_PACKAGE_LIST = 'GET_PACKAGE_LIST';
+export const GET_ALL_SERVICES = 'GET_ALL_SERVICES';
+export const ADD_TO_CART = 'ADD_TO_CART';
+export const GET_CART = 'GET_CART';

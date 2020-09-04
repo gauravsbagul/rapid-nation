@@ -2,6 +2,9 @@ import {
   GET_CATEGORY,
   GET_PACKAGE_LIST,
   GET_SUB_CATEGORY,
+  GET_ALL_SERVICES,
+  ADD_TO_CART,
+  GET_CART,
 } from '../actions/types';
 
 const initialState = {};
@@ -25,6 +28,24 @@ export default function (state = initialState, action) {
       return {
         ...state,
         getPackageListResponse: payload,
+      };
+      break;
+    case GET_ALL_SERVICES:
+      return {
+        ...state,
+        getAllServicesResponse: payload,
+      };
+      break;
+    case ADD_TO_CART:
+      return {
+        ...state,
+        addToCartResponse: payload,
+      };
+      break;
+    case GET_CART:
+      return {
+        ...state,
+        getCartResponse: payload,
       };
       break;
     default:

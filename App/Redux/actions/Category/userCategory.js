@@ -1,5 +1,12 @@
 import axios from 'axios';
-import { GET_CATEGORY, GET_PACKAGE_LIST, GET_SUB_CATEGORY } from '../types';
+import {
+  ADD_TO_CART,
+  GET_ALL_SERVICES,
+  GET_CATEGORY,
+  GET_PACKAGE_LIST,
+  GET_SUB_CATEGORY,
+  GET_CART,
+} from '../types';
 
 const API = 'https://portal.rapidnation.in';
 
@@ -103,6 +110,113 @@ export const clearPackageListProps = () => {
       resolve(
         dispatch({
           type: GET_PACKAGE_LIST,
+          payload: undefined,
+        }),
+      );
+    });
+};
+
+export const getAllServces = () => {
+  return async (dispatch, getState) => {
+    try {
+      const body = {
+        method: 'GET',
+        url: API + '/allservices/getAllServices',
+      };
+      const response = await axios(body);
+      dispatch({
+        type: GET_ALL_SERVICES,
+        payload: { response: response?.data, error: false },
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_ALL_SERVICES,
+        payload: { response: error?.response, error: true },
+      });
+    }
+  };
+};
+
+export const clearGetAllServcesProps = () => {
+  return (dispatch) =>
+    new Promise((resolve) => {
+      resolve(
+        dispatch({
+          type: GET_ALL_SERVICES,
+          payload: undefined,
+        }),
+      );
+    });
+};
+
+export const addToCart = (data) => {
+  return async (dispatch, getState) => {
+    try {
+      const { loginResponse } = getState().user;
+      data.customer_id = loginResponse?.response?.response?.customerid;
+
+      const body = {
+        method: 'POST',
+        url: API + '/cart/addCart',
+        data,
+      };
+      const response = await axios(body);
+      dispatch({
+        type: ADD_TO_CART,
+        payload: { response: response?.data, error: false },
+      });
+    } catch (error) {
+      dispatch({
+        type: ADD_TO_CART,
+        payload: { response: error?.response, error: true },
+      });
+    }
+  };
+};
+
+export const clearAddToCartProps = () => {
+  return (dispatch) =>
+    new Promise((resolve) => {
+      resolve(
+        dispatch({
+          type: ADD_TO_CART,
+          payload: undefined,
+        }),
+      );
+    });
+};
+
+export const getCart = (data) => {
+  return async (dispatch, getState) => {
+    try {
+      const { loginResponse } = getState().user;
+      data.customer_id = loginResponse?.response?.response?.customerid;
+
+      const body = {
+        method: 'POST',
+        url: API + '/cart/getCart',
+        data,
+      };
+      const response = await axios(body);
+      dispatch({
+        type: GET_CART,
+        payload: { response: response?.data, error: false },
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_CART,
+        payload: { response: error?.response, error: true },
+      });
+    }
+  };
+};
+
+export const clearGetCartProps = () => {
+  return (dispatch) =>
+    new Promise((resolve) => {
+      resolve(
+        dispatch({
+          type: GET_CART,
           payload: undefined,
         }),
       );
