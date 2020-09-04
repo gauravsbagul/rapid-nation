@@ -11,14 +11,31 @@ import {
 import { AppStyles } from '../AppStyles/Styles';
 import { colors } from '../Asset/colors/colors';
 import { images } from '../Asset/images/images';
-const MessagesCard = ({ item, isPackage, onPress, packageData }) => {
+const MessagesCard = ({
+  image,
+  item,
+  isPackage,
+  onPress,
+  packageData,
+  onItemAddedToCart,
+}) => {
   return (
     <View style={styles.container}>
       {/* Header */}
 
-      <Image source={item.image} style={{ width: '100%', height: 150 }} />
+      <Image
+        source={
+          item
+            ? {
+                uri: `https://portal.rapidnation.in/category/${item.image}`,
+              }
+            : image
+        }
+        style={{ width: '100%', height: 150 }}
+      />
       <ImageBackground
         style={{ position: 'absolute', top: 2, right: 2, height: 10 }}
+        imageStyle={{ height: '100%', width: '100%' }}
         resizeMode="contain"
         source={images.offer_shape}></ImageBackground>
       {/* Body */}
@@ -173,7 +190,9 @@ const MessagesCard = ({ item, isPackage, onPress, packageData }) => {
                 </Text>
               </View>
             </View>
-            <TouchableOpacity style={styles.plusBtn}>
+            <TouchableOpacity
+              style={styles.plusBtn}
+              onPress={() => onItemAddedToCart({ item, packageData })}>
               <Text
                 style={{
                   ...AppStyles.regularText,

@@ -1,6 +1,7 @@
 import { CheckBox, Icon, Text } from 'native-base';
 import React, { Fragment, useEffect, useState } from 'react';
 import {
+  Alert,
   FlatList,
   Image,
   ScrollView,
@@ -17,6 +18,8 @@ import { images } from '../../../Asset/images/images';
 import Header from '../../../components/Header';
 import MessagesCard from '../../../components/MessagesCard';
 import {
+  addToCart,
+  clearAddToCartProps,
   clearPackageListProps,
   getPackageList,
 } from '../../../Redux/actions/Category/userCategory';
@@ -29,7 +32,9 @@ const MessagesAndCheckup = (props) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [packageList, setPackageList] = useState([]);
   const [selectedPackage, setSelectedPackage] = useState(null);
-
+  const [addedItems, setAddedItems] = useState([]);
+  const [itemsCount, setItemsCount] = useState(0);
+  const [toastMessage, setToastMessage] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(
     services.findIndex((item) => item._id === selectedItem._id),
   );
@@ -81,12 +86,69 @@ const MessagesAndCheckup = (props) => {
           },
         );
       }
+      if (
+        props.category?.addToCartResponse?.response?.message &&
+        props.category?.addToCartResponse?.response?.status
+      ) {
+        props.clearAddToCartProps();
+        console.log(
+          'MessagesAndCheckup -> props.category?.addToCartResponse?.response?.message',
+          props.category?.addToCartResponse?.response?.message,
+        );
+
+        Alert.alert(
+          ``,
+          props.category?.addToCartResponse?.response?.message,
+          [{ text: 'OK' }],
+          {
+            cancelable: false,
+          },
+        );
+      } else if (
+        props.category?.addToCartResponse?.response &&
+        !props.category?.addToCartResponse?.response?.status
+      ) {
+        props.clearAddToCartProps();
+        Alert.alert(
+          ``,
+          props.category?.addToCartResponse?.response?.message ||
+            'Something went wrong, please try again!',
+          [{ text: 'OK' }],
+          {
+            cancelable: false,
+          },
+        );
+      }
     }
   }, [props.category]);
 
   useEffect(() => {
     props.getPackageList();
   }, []);
+
+  useEffect(() => {
+    addedItems.length
+      ? setItemsCount(
+          (prevItemCount) =>
+            (prevItemCount +=
+              addedItems[addedItems.length - 1].packageData.servicedata
+                .netPrice),
+        )
+      : null;
+  }, [addedItems]);
+
+  //addToCart
+
+  const onItemAddedToCart = ({ item, packageData }) => {
+    setAddedItems((prevItems) => [...prevItems, { item, packageData }]);
+    const data = {
+      p_id: packageData._id,
+      quantity: 1,
+      grossprice: packageData?.servicedata?.grossPrice,
+      netprice: packageData?.servicedata?.netPrice,
+    };
+    props.addToCart(data);
+  };
 
   return (
     <Fragment>
@@ -383,13 +445,16 @@ const MessagesAndCheckup = (props) => {
         <View style={{ marginVertical: 15, paddingHorizontal: 10 }}>
           {type !== 'package' ? (
             <MessagesCard
-              item={{ image: images.head_shoulder }}
+              image={{ image: images.head_shoulder }}
+              item={selectedItem}
+              onItemAddedToCart={onItemAddedToCart}
               packageData={packageList.length ? packageList[0] : null}
             />
           ) : (
             <MessagesCard
-              item={{ image: images.color_care }}
+              image={{ image: images.color_care }}
               isPackage
+              onItemAddedToCart={onItemAddedToCart}
               onPress={() => setIsModalVisible(true)}
             />
           )}
@@ -400,7 +465,7 @@ const MessagesAndCheckup = (props) => {
             <Text style={{ ...AppStyles.regularText, color: colors.white }}>
               Items
             </Text>
-            <Text style={styles.priceBoxCount}>1</Text>
+            <Text style={styles.priceBoxCount}>{addedItems.length}</Text>
           </View>
           <TouchableOpacity
             onPress={() => navigation.navigate('MessagePackageDetails')}
@@ -416,7 +481,8 @@ const MessagesAndCheckup = (props) => {
                 color: colors.white,
                 marginHorizontal: 4,
               }}>
-              {packageList[0]?.servicedata?.netPrice}
+              {/* {packageList[0]?.servicedata?.netPrice} */}
+              {itemsCount}
             </Text>
             <Icon
               name="caretright"
@@ -448,6 +514,8 @@ const MessagesAndCheckup = (props) => {
 const mapDispatchToProps = {
   getPackageList,
   clearPackageListProps,
+  addToCart,
+  clearAddToCartProps,
 };
 const mapStateToProps = ({ category }) => ({
   category,
@@ -591,3 +659,4 @@ const styles = StyleSheet.create({
     right: 3,
   },
 });
+//

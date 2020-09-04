@@ -12,6 +12,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
@@ -24,9 +25,9 @@ import ImageHorizontalScroll from '../components/ImageHorizontalScroll';
 import ReviewImageScroll from '../components/ReviewImageScroll';
 import {
   clearGetCategoryProps,
-  clearGetSubCategoryProps,
   getCategory,
-  getSubCategory,
+  getAllServces,
+  clearGetAllServcesProps,
 } from '../Redux/actions/Category/userCategory';
 import { SelectGenderModal } from './Services/SelectgenderModal';
 
@@ -34,8 +35,8 @@ const Home = (props) => {
   const { navigation } = props;
   const [isServiceModalVisible, setServiceModalVisible] = useState(false);
   const [category, setCategory] = useState([]);
-  const [subCategory, setSubCategory] = useState([]);
   const [isGenderModalVisible, setIsGenderModalVisible] = useState(false);
+  const [getAllApiLoader, setGetAllApiLoader] = useState(false);
 
   const toggleServiceModal = () => {
     setServiceModalVisible(!isServiceModalVisible);
@@ -147,6 +148,33 @@ const Home = (props) => {
           },
         );
       }
+
+      if (
+        props.category?.getAllServicesResponse?.response?.response &&
+        props.category?.getAllServicesResponse?.response?.status
+      ) {
+        console.log(
+          'Home -> props.category?.getUserCategory?.response?.response',
+          props.category?.getAllServicesResponse?.response?.response,
+        );
+        // concat old cateory array with new services here
+        setGetAllApiLoader(false);
+        props.clearGetAllServcesProps();
+      } else if (
+        props.category?.getAllServicesResponse?.response &&
+        !props.category?.getAllServicesResponse?.response?.status
+      ) {
+        props.clearGetAllServcesProps();
+        Alert.alert(
+          ``,
+          props.category?.getAllServicesResponse?.response?.response ||
+            'Something went wrong, please try again!',
+          [{ text: 'OK' }],
+          {
+            cancelable: false,
+          },
+        );
+      }
     }
   }, [props.category, props.navigation]);
 
@@ -193,7 +221,9 @@ const Home = (props) => {
                 <TouchableOpacity
                   style={styles.frequentlyContainer}
                   onPress={() =>
-                    navigation.navigate('AllHomeServices', { item })
+                    item.title == 'Salon'
+                      ? navigation.navigate('AllHomeServices', { item })
+                      : {}
                   }>
                   <Image
                     source={{
@@ -209,7 +239,21 @@ const Home = (props) => {
               )}
             />
             <View style={{ marginVertical: 10 }}>
-              <Button onPress={() => {}} secondary title="View All" />
+              {getAllApiLoader ? (
+                <ActivityIndicator
+                  size={'large'}
+                  color={'rgba(13, 131, 238,.8)'}
+                />
+              ) : category.length > 3 ? null : (
+                <Button
+                  onPress={() => {
+                    props.getAllServces();
+                    setGetAllApiLoader(true);
+                  }}
+                  secondary
+                  title="View All"
+                />
+              )}
             </View>
           </View>
 
@@ -688,8 +732,8 @@ const Home = (props) => {
 const mapDispatchToProps = {
   getCategory,
   clearGetCategoryProps,
-  clearGetSubCategoryProps,
-  getSubCategory,
+  getAllServces,
+  clearGetAllServcesProps,
 };
 const mapStateToProps = ({ category }) => ({
   category,
