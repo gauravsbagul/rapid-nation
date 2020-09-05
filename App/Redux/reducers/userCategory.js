@@ -4,7 +4,7 @@ import {
   GET_SUB_CATEGORY,
   GET_ALL_SERVICES,
   ADD_TO_CART,
-  GET_CART,
+  GET_CART_BY_ID,
 } from '../actions/types';
 
 const initialState = {};
@@ -42,7 +42,7 @@ export default function (state = initialState, action) {
         addToCartResponse: payload,
       };
       break;
-    case GET_CART:
+    case GET_CART_BY_ID:
       return {
         ...state,
         getCartResponse: payload,

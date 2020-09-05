@@ -12,7 +12,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  ActivityIndicator,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
@@ -24,10 +23,10 @@ import Header from '../components/Header';
 import ImageHorizontalScroll from '../components/ImageHorizontalScroll';
 import ReviewImageScroll from '../components/ReviewImageScroll';
 import {
-  clearGetCategoryProps,
-  getCategory,
-  getAllServces,
   clearGetAllServcesProps,
+  clearGetCategoryProps,
+  getAllServces,
+  getCategory,
 } from '../Redux/actions/Category/userCategory';
 import { SelectGenderModal } from './Services/SelectgenderModal';
 
@@ -37,6 +36,7 @@ const Home = (props) => {
   const [category, setCategory] = useState([]);
   const [isGenderModalVisible, setIsGenderModalVisible] = useState(false);
   const [getAllApiLoader, setGetAllApiLoader] = useState(false);
+  const [isViewAll, setIsViewAll] = useState(false);
 
   const toggleServiceModal = () => {
     setServiceModalVisible(!isServiceModalVisible);
@@ -214,7 +214,7 @@ const Home = (props) => {
 
           <View style={{ paddingHorizontal: 4 }}>
             <FlatList
-              data={category}
+              data={isViewAll ? category : category.slice(0, 3)}
               keyExtractor={(_, key) => key}
               numColumns={3}
               renderItem={({ item }) => (
@@ -239,21 +239,15 @@ const Home = (props) => {
               )}
             />
             <View style={{ marginVertical: 10 }}>
-              {getAllApiLoader ? (
-                <ActivityIndicator
-                  size={'large'}
-                  color={'rgba(13, 131, 238,.8)'}
-                />
-              ) : category.length > 3 ? null : (
+              {isViewAll ? null : category.length > 3 ? (
                 <Button
                   onPress={() => {
-                    props.getAllServces();
-                    setGetAllApiLoader(true);
+                    setIsViewAll(true);
                   }}
                   secondary
                   title="View All"
                 />
-              )}
+              ) : null}
             </View>
           </View>
 

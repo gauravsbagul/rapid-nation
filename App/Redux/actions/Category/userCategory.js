@@ -5,7 +5,7 @@ import {
   GET_CATEGORY,
   GET_PACKAGE_LIST,
   GET_SUB_CATEGORY,
-  GET_CART,
+  GET_CART_BY_ID,
 } from '../types';
 
 const API = 'https://portal.rapidnation.in';
@@ -186,25 +186,27 @@ export const clearAddToCartProps = () => {
     });
 };
 
-export const getCart = (data) => {
+export const getCartById = () => {
   return async (dispatch, getState) => {
     try {
       const { loginResponse } = getState().user;
-      data.customer_id = loginResponse?.response?.response?.customerid;
+      customer_id = loginResponse?.response?.response?.customerid;
 
       const body = {
         method: 'POST',
-        url: API + '/cart/getCart',
-        data,
+        url: API + '/cart/getCartByCid',
+        data: {
+          customer_id,
+        },
       };
       const response = await axios(body);
       dispatch({
-        type: GET_CART,
+        type: GET_CART_BY_ID,
         payload: { response: response?.data, error: false },
       });
     } catch (error) {
       dispatch({
-        type: GET_CART,
+        type: GET_CART_BY_ID,
         payload: { response: error?.response, error: true },
       });
     }
@@ -216,7 +218,7 @@ export const clearGetCartProps = () => {
     new Promise((resolve) => {
       resolve(
         dispatch({
-          type: GET_CART,
+          type: GET_CART_BY_ID,
           payload: undefined,
         }),
       );
