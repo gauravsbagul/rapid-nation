@@ -16,6 +16,7 @@ import { images } from '../../../Asset/images/images';
 
 const MessagePcakgeDetails = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
+
   const smallTextArry = [
     {
       title: 'Package Includes',
@@ -41,9 +42,9 @@ const MessagePcakgeDetails = ({ navigation }) => {
     },
   ];
 
-  const goToCart = () => {
+  const goToCart = (isMale) => {
     setModalVisible(false);
-    navigation.navigate('Cart');
+    navigation.navigate('Cart', { isMale });
   };
   return (
     <Fragment>
@@ -83,7 +84,7 @@ const MessagePcakgeDetails = ({ navigation }) => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <CheckBox
                 checked={true}
-                onPress={() => goToCart()}
+                onPress={() => goToCart(true)}
                 style={{ marginRight: 15 }}
               />
               <Text style={AppStyles.mediumBold}>Yes</Text>
@@ -92,7 +93,7 @@ const MessagePcakgeDetails = ({ navigation }) => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <CheckBox
                 checked={false}
-                onPress={() => goToCart()}
+                onPress={() => goToCart(false)}
                 style={{ marginRight: 15 }}
               />
               <Text style={AppStyles.mediumBold}>No</Text>

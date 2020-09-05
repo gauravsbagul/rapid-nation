@@ -67,10 +67,6 @@ const MessagesAndCheckup = (props) => {
           setPackageList(
             props.category?.getPackageListResponse?.response?.response,
           );
-        } else {
-          Alert.alert(``, 'No Subcategory Available', [{ text: 'OK' }], {
-            cancelable: false,
-          });
         }
       } else if (
         props.category?.getPackageListResponse?.response &&

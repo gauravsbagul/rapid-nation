@@ -76,6 +76,7 @@ const Login = (props) => {
   }, [props]);
 
   const onLogin = () => {
+    Keyboard.dismiss();
     if (!email || !password || !phone) {
       Alert.alert('', 'Empty field is not allowed', [{ text: 'OK' }], {
         cancelable: false,
@@ -253,7 +254,8 @@ const Login = (props) => {
             <Text style={{ color: '#fff' }}>Login</Text>
           )}
         </Button>
-        <View
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('Signup')}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -265,7 +267,7 @@ const Login = (props) => {
             {' '}
             New Register
           </Text>
-        </View>
+        </TouchableOpacity>
       </View>
       <View
         style={{

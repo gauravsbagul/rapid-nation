@@ -1,24 +1,43 @@
-import React, { Fragment, useState, useRef } from 'react';
+import Geolocation from '@react-native-community/geolocation';
+import { Icon } from 'native-base';
+import React, { Fragment, useRef, useState } from 'react';
 import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  StatusBar,
   Dimensions,
   Image,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { colors } from '../Asset/colors/colors';
+import MapView, { Marker } from 'react-native-maps';
 import { AppStyles } from '../AppStyles/Styles';
+import { colors } from '../Asset/colors/colors';
 import { images } from '../Asset/images/images';
 import Button from '../components/Button';
-import { Icon, CheckBox } from 'native-base';
-import MapView, { Marker } from 'react-native-maps';
 
-const Location = ({ navigation }) => {
+const Location = (props) => {
+  const { navigation } = props;
   const [isMapVisible, setMapVisible] = useState(false);
   const mapRef = useRef();
+  const [myLocation, setMyLocation] = useState(null);
+
+  const getMyCurrentLocation = () => {
+    Geolocation.getCurrentPosition(
+      (info) => {
+        console.log('getMyCurrentLocation -> info', info);
+        const initialRegion = {
+          latitude: info?.coords?.latitude,
+          longitude: info?.coords?.longitude,
+        };
+        setMyLocation(initialRegion);
+      },
+      (error) => Alert.alert('Error', JSON.stringify(error)),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+    );
+  };
+
   return (
     <Fragment>
       <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
@@ -117,7 +136,9 @@ const Location = ({ navigation }) => {
               Enter Your Location
             </Text>
 
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => getMyCurrentLocation()}>
               <Icon
                 name="my-location"
                 style={{ fontSize: 20 }}
@@ -167,8 +188,15 @@ const Location = ({ navigation }) => {
               longitudeDelta: 0.0421,
             }}
             showsUserLocation={true}
-            followsUserLocation={true}
-          />
+            followsUserLocation={true}>
+            {myLocation ? (
+              <Marker
+                coordinate={myLocation}
+                title={'Your Location'}
+                draggable
+              />
+            ) : null}
+          </MapView>
           {/* Data */}
           <View style={styles.input}>
             <Icon name="user" type="FontAwesome" style={styles.icon} />
