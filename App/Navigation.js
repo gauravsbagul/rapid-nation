@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import { colors } from './Asset/colors/colors';
 import { fetchUser, isLoggedIn } from './Redux/actions/Auth/userAuth';
 import Account from './screens/Account';
-import AllHomeServices from './screens/AllHomeServices';
+import AllHomeServices from './screens/Services/AllHomeServices';
 import Blog from './screens/Blog';
 import Cart from './screens/Cart';
 import Checkout from './screens/Checkout';
@@ -26,8 +26,8 @@ import Home from './screens/Home';
 import Invoice from './screens/Invoice';
 import JoinUs from './screens/JoinUs';
 import Location from './screens/Location';
-import MessagePcakgeDetails from './screens/MessagePcakgeDetails';
-import MessagesAndCheckup from './screens/MessagesAndCheckup';
+import MessagePcakgeDetails from './screens/Services/Salon/MessagePcakgeDetails';
+import MessagesAndCheckup from './screens/Services/Salon/MessagesAndCheckup';
 import MyOrder from './screens/MyOrder';
 import MyOrderComplete from './screens/MyOrderComplete';
 import MyOrderDetail from './screens/MyOrderDetail';
@@ -244,10 +244,10 @@ function AuthStack() {
   );
 }
 
-const Navigation = ({ isAuthenticated, isLoggedIn, navigation }) => {
-  console.log('Navigation -> navigation', navigation);
+const Navigation = (props) => {
+  const { isAuthenticated, navigation } = props;
   useEffect(() => {
-    isLoggedIn();
+    props.isLoggedIn();
   }, []);
 
   return (

@@ -1,32 +1,32 @@
 import { Button, Icon } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
+  Alert,
   Dimensions,
   Image,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  Alert,
-  ActivityIndicator,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
 import {
-  signUp,
-  getOTP,
   clearOtpProps,
+  clearOTPProps,
   clearRegisterDetailsProps,
-  verifyOTPFunc,
   clearVerifyOTPProps,
+  getOTP,
   isAuthenticatedFunc,
+  signUp,
+  verifyOTPFunc,
 } from '../../Redux/actions/Auth/userAuth';
 import { OtpVerify } from './OtpVerify';
 import Styles from './Styles';
 
 const { width, height } = Dimensions.get('window');
 const emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-const customerid = '5f4a72ded22361565e1ffe57';
 const Signup = (props) => {
   const [verify, setVerify] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -35,6 +35,8 @@ const Signup = (props) => {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [customerId, setCustomerId] = useState();
+  const [receivedOTP, setReceivedOTP] = useState('');
 
   useEffect(() => {
     if (props.navigation.isFocused()) {
@@ -44,6 +46,8 @@ const Signup = (props) => {
           props.user?.registerResponse?.response?.response &&
           props.user?.registerResponse?.response?.status
         ) {
+          setCustomerId(props.user?.registerResponse?.OTPresponse?.customerid);
+          setReceivedOTP(props.user?.registerResponse?.OTPresponse?.otp);
           props.clearRegisterDetailsProps();
           setIsLoading(false);
           Alert.alert(
@@ -78,6 +82,7 @@ const Signup = (props) => {
           );
         }
       }
+
       if (
         props.user?.verifyOTP?.response?.response &&
         props.user?.verifyOTP?.response?.status
@@ -98,7 +103,6 @@ const Signup = (props) => {
           [
             {
               text: 'OK',
-              onPress: () => setIsModalVisible(true),
             },
           ],
           {
@@ -378,7 +382,12 @@ const Signup = (props) => {
         swipeDirection={['down']}
         onSwipeMove={(val) => {}}
         onSwipeComplete={() => setIsModalVisible(false)}>
-        <OtpVerify phone={phone} onVerifyOtp={onVerifyOtp} />
+        <OtpVerify
+          phone={phone}
+          onVerifyOtp={onVerifyOtp}
+          customerId={customerId}
+          receivedOTP={receivedOTP}
+        />
       </Modal>
     </View>
   );
@@ -392,6 +401,7 @@ const mapDispatchToProps = {
   verifyOTPFunc,
   clearVerifyOTPProps,
   isAuthenticatedFunc,
+  clearOTPProps,
 };
 const mapStateToProps = ({ user }) => ({
   user,

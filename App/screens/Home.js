@@ -23,24 +23,20 @@ import Header from '../components/Header';
 import ImageHorizontalScroll from '../components/ImageHorizontalScroll';
 import ReviewImageScroll from '../components/ReviewImageScroll';
 import {
+  clearGetAllServcesProps,
   clearGetCategoryProps,
+  getAllServces,
   getCategory,
 } from '../Redux/actions/Category/userCategory';
+import { SelectGenderModal } from './Services/SelectgenderModal';
 
 const Home = (props) => {
   const { navigation } = props;
   const [isServiceModalVisible, setServiceModalVisible] = useState(false);
-  const [category, setCategory] = useState([
-    { name: 'Electrical', image: images.plug },
-    { name: 'Service', image: images.customer },
-    { name: 'Real State', image: images.building },
-    { name: 'Pet Services', image: images.pet },
-    { name: 'Interior Design', image: images.plan },
-    { name: 'Transport Pick & Drop etc.', image: images.shipped },
-    { name: 'Painting', image: images.paint },
-    { name: 'Computer Repair', image: images.computer },
-    { name: 'Plumbing', image: images.water },
-  ]);
+  const [category, setCategory] = useState([]);
+  const [isGenderModalVisible, setIsGenderModalVisible] = useState(false);
+  const [getAllApiLoader, setGetAllApiLoader] = useState(false);
+  const [isViewAll, setIsViewAll] = useState(false);
 
   const toggleServiceModal = () => {
     setServiceModalVisible(!isServiceModalVisible);
@@ -123,39 +119,74 @@ const Home = (props) => {
 
   useEffect(() => {
     props.getCategory();
-    return () => {};
   }, []);
 
   useEffect(() => {
-    if (navigation.isFocused()) {
+    if (props.navigation.isFocused()) {
       if (
         props.category?.getUserCategory?.response?.response &&
         props.category?.getUserCategory?.response?.status
-      )
+      ) {
+        console.log(
+          'Home -> props.category?.getUserCategory?.response?.response',
+          props.category?.getUserCategory?.response?.response,
+        );
+        setCategory(props.category?.getUserCategory?.response?.response);
         props.clearGetCategoryProps();
-      setCategory(props.category?.getUserCategory?.response?.response);
-    } else if (
-      props.category?.getUserCategory?.response &&
-      !props.category?.getUserCategory?.response?.status
-    ) {
-      props.clearGetCategoryProps();
-      Alert.alert(
-        ``,
-        props.category?.getUserCategory?.response?.response ||
-          'Something went wrong, please try again!',
-        [{ text: 'OK' }],
-        {
-          cancelable: false,
-        },
-      );
+      } else if (
+        props.category?.getUserCategory?.response &&
+        !props.category?.getUserCategory?.response?.status
+      ) {
+        props.clearGetCategoryProps();
+        Alert.alert(
+          ``,
+          props.category?.getUserCategory?.response?.response ||
+            'Something went wrong, please try again!',
+          [{ text: 'OK' }],
+          {
+            cancelable: false,
+          },
+        );
+      }
+
+      if (
+        props.category?.getAllServicesResponse?.response?.response &&
+        props.category?.getAllServicesResponse?.response?.status
+      ) {
+        console.log(
+          'Home -> props.category?.getUserCategory?.response?.response',
+          props.category?.getAllServicesResponse?.response?.response,
+        );
+        // concat old cateory array with new services here
+        setGetAllApiLoader(false);
+        props.clearGetAllServcesProps();
+      } else if (
+        props.category?.getAllServicesResponse?.response &&
+        !props.category?.getAllServicesResponse?.response?.status
+      ) {
+        props.clearGetAllServcesProps();
+        Alert.alert(
+          ``,
+          props.category?.getAllServicesResponse?.response?.response ||
+            'Something went wrong, please try again!',
+          [{ text: 'OK' }],
+          {
+            cancelable: false,
+          },
+        );
+      }
     }
-  }, [props]);
+  }, [props.category, props.navigation]);
 
   return (
     <Fragment>
       <StatusBar
         barStyle="light-content"
         backgroundColor={colors.header_linear_1}
+      />
+      <SelectGenderModal
+        isGenderModalVisible={isGenderModalVisible}
+        onRequestGenderModalClose={() => setIsGenderModalVisible(false)}
       />
 
       <ScrollView style={{ flex: 1, backgroundColor: colors.lightWhite }}>
@@ -183,29 +214,40 @@ const Home = (props) => {
 
           <View style={{ paddingHorizontal: 4 }}>
             <FlatList
-              data={category}
+              data={isViewAll ? category : category.slice(0, 3)}
               keyExtractor={(_, key) => key}
               numColumns={3}
               renderItem={({ item }) => (
-                <TouchableOpacity style={styles.servicesContainer}>
+                <TouchableOpacity
+                  style={styles.frequentlyContainer}
+                  onPress={() =>
+                    item.title == 'Salon'
+                      ? navigation.navigate('AllHomeServices', { item })
+                      : {}
+                  }>
                   <Image
-                    source={item.image}
-                    style={{ height: 30, marginBottom: 5 }}
-                    resizeMode="contain"
+                    source={{
+                      uri: `https://portal.rapidnation.in/maincategory/${item.image}`,
+                    }}
+                    style={{ height: 85, width: '100%' }}
+                    resizeMode="cover"
                   />
-                  <Text
-                    style={{
-                      ...AppStyles.smallText,
-                      textAlign: 'center',
-                      color: 'black',
-                    }}>
-                    {item.name}
-                  </Text>
+                  <View style={{ flexGrow: 1, justifyContent: 'center' }}>
+                    <Text style={styles.frequentlyText}>{item.title}</Text>
+                  </View>
                 </TouchableOpacity>
               )}
             />
             <View style={{ marginVertical: 10 }}>
-              <Button onPress={() => {}} secondary title="View All" />
+              {isViewAll ? null : category.length > 3 ? (
+                <Button
+                  onPress={() => {
+                    setIsViewAll(true);
+                  }}
+                  secondary
+                  title="View All"
+                />
+              ) : null}
             </View>
           </View>
 
@@ -305,11 +347,7 @@ const Home = (props) => {
               )}
             />
             <View style={{ marginVertical: 10 }}>
-              <Button
-                onPress={() => navigation.navigate('AllHomeServices')}
-                secondary
-                title="View All"
-              />
+              <Button onPress={() => {}} secondary title="View All" />
             </View>
           </View>
 
@@ -688,6 +726,8 @@ const Home = (props) => {
 const mapDispatchToProps = {
   getCategory,
   clearGetCategoryProps,
+  getAllServces,
+  clearGetAllServcesProps,
 };
 const mapStateToProps = ({ category }) => ({
   category,

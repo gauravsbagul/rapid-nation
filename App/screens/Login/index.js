@@ -1,14 +1,15 @@
 import { Button, Icon } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Dimensions,
   Image,
+  Keyboard,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  ActivityIndicator,
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
@@ -23,14 +24,12 @@ const emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 const { width, height } = Dimensions.get('window');
 
 const Login = (props) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log('Login -> props', props);
     if (props.navigation.isFocused()) {
       if (props.user?.loginResponse) {
         if (
@@ -53,6 +52,11 @@ const Login = (props) => {
               },
             );
           } else {
+            console.log(
+              'Login -> props.user?.loginResponse?.response',
+              props.user?.loginResponse?.response,
+            );
+
             setIsLoading(false);
             props.isAuthenticatedFunc(true);
           }
@@ -72,6 +76,7 @@ const Login = (props) => {
   }, [props]);
 
   const onLogin = () => {
+    Keyboard.dismiss();
     if (!email || !password || !phone) {
       Alert.alert('', 'Empty field is not allowed', [{ text: 'OK' }], {
         cancelable: false,
@@ -191,6 +196,8 @@ const Login = (props) => {
               }}
               value={email || phone}
               placeholder={'Email / Phone Number'}
+              blurOnSubmit={false}
+              onSubmitEditing={() => Keyboard.dismiss()}
             />
           </View>
         </View>
@@ -207,6 +214,8 @@ const Login = (props) => {
               value={password}
               placeholder={'Password'}
               secureTextEntry={true}
+              blurOnSubmit={false}
+              onSubmitEditing={() => Keyboard.dismiss()}
             />
           </View>
         </View>
@@ -245,7 +254,8 @@ const Login = (props) => {
             <Text style={{ color: '#fff' }}>Login</Text>
           )}
         </Button>
-        <View
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('Signup')}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -257,7 +267,7 @@ const Login = (props) => {
             {' '}
             New Register
           </Text>
-        </View>
+        </TouchableOpacity>
       </View>
       <View
         style={{

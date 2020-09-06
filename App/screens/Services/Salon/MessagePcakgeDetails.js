@@ -1,24 +1,22 @@
+import { CheckBox, Icon } from 'native-base';
 import React, { Fragment, useState } from 'react';
 import {
+  Image,
+  ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
-  View,
-  ScrollView,
-  FlatList,
   TouchableOpacity,
-  Image,
-  StatusBar,
-  Dimensions,
-  TextInput,
+  View,
 } from 'react-native';
-import { colors } from '../Asset/colors/colors';
-import { AppStyles } from '../AppStyles/Styles';
-import { images } from '../Asset/images/images';
-import { Icon, CheckBox } from 'native-base';
 import Modal from 'react-native-modal';
+import { AppStyles } from '../../../AppStyles/Styles';
+import { colors } from '../../../Asset/colors/colors';
+import { images } from '../../../Asset/images/images';
 
 const MessagePcakgeDetails = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
+
   const smallTextArry = [
     {
       title: 'Package Includes',
@@ -44,9 +42,9 @@ const MessagePcakgeDetails = ({ navigation }) => {
     },
   ];
 
-  const goToCart = () => {
+  const goToCart = (isMale) => {
     setModalVisible(false);
-    navigation.navigate('Cart');
+    navigation.navigate('Cart', { isMale });
   };
   return (
     <Fragment>
@@ -86,7 +84,7 @@ const MessagePcakgeDetails = ({ navigation }) => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <CheckBox
                 checked={true}
-                onPress={() => goToCart()}
+                onPress={() => goToCart(true)}
                 style={{ marginRight: 15 }}
               />
               <Text style={AppStyles.mediumBold}>Yes</Text>
@@ -95,7 +93,7 @@ const MessagePcakgeDetails = ({ navigation }) => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <CheckBox
                 checked={false}
-                onPress={() => goToCart()}
+                onPress={() => goToCart(false)}
                 style={{ marginRight: 15 }}
               />
               <Text style={AppStyles.mediumBold}>No</Text>

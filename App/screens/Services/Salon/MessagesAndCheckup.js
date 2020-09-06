@@ -1,37 +1,44 @@
-import React, { Fragment, useState } from 'react';
+import { CheckBox, Icon, Text } from 'native-base';
+import React, { Fragment, useEffect, useState } from 'react';
 import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
+  Alert,
   FlatList,
-  TouchableOpacity,
   Image,
+  ScrollView,
   StatusBar,
-  Dimensions,
-  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import Header from '../components/Header';
-import { colors } from '../Asset/colors/colors';
-import { AppStyles } from '../AppStyles/Styles';
-import { images } from '../Asset/images/images';
-import Button from '../components/Button';
-import { Icon, CheckBox } from 'native-base';
-import MessagesCard from '../components/MessagesCard';
 import Modal from 'react-native-modal';
-
-const MessagesAndCheckup = ({ navigation }) => {
-  const [gender, setGender] = useState('male');
-  const [type, setType] = useState('message');
+import { connect } from 'react-redux';
+import { AppStyles } from '../../../AppStyles/Styles';
+import { colors } from '../../../Asset/colors/colors';
+import { images } from '../../../Asset/images/images';
+import Header from '../../../components/Header';
+import MessagesCard from '../../../components/MessagesCard';
+import {
+  addToCart,
+  clearAddToCartProps,
+  clearPackageListProps,
+  getPackageList,
+} from '../../../Redux/actions/Category/userCategory';
+const MessagesAndCheckup = (props) => {
+  const { navigation } = props;
+  const [selectedItem, setSelectedItem] = useState(props.route?.params?.item);
+  const [services, setServices] = useState(props.route?.params?.services);
+  const [gender, setGender] = useState(props.route?.params?.gender);
+  const [type, setType] = useState(selectedItem.title);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [packageList, setPackageList] = useState([]);
+  const [selectedPackage, setSelectedPackage] = useState(null);
+  const [addedItems, setAddedItems] = useState([]);
+  const [itemsCount, setItemsCount] = useState(0);
+  const [toastMessage, setToastMessage] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState(
+    services.findIndex((item) => item._id === selectedItem._id),
+  );
 
-  const messagesArray = [
-    { name: 'Makeup', image: images.cleanup_small },
-    { name: 'Massage', image: images.message_small },
-    { name: 'Threading', image: images.threading_small },
-    { name: 'Cleanup', image: images.cleanup_small },
-    { name: 'Manicure', image: images.manicure_small },
-  ];
   const packagesArray = [
     { name: 'Threading', image: images.threading_blue },
     { name: 'Massage', image: images.message_blue },
@@ -49,6 +56,95 @@ const MessagesAndCheckup = ({ navigation }) => {
     { title: 'Fruit Cleanup - Sara (Sara)' },
     { title: 'Shine & Glow Facial with peel-off mask' },
   ];
+
+  useEffect(() => {
+    if (props.navigation.isFocused()) {
+      if (
+        props.category?.getPackageListResponse?.response?.response &&
+        props.category?.getPackageListResponse?.response?.status
+      ) {
+        if (props.category?.getPackageListResponse?.response?.response.length) {
+          setPackageList(
+            props.category?.getPackageListResponse?.response?.response,
+          );
+        }
+      } else if (
+        props.category?.getPackageListResponse?.response &&
+        !props.category?.getPackageListResponse?.response?.status
+      ) {
+        Alert.alert(
+          ``,
+          props.category?.getUserCategory?.response?.response ||
+            'Something went wrong, please try again!',
+          [{ text: 'OK' }],
+          {
+            cancelable: false,
+          },
+        );
+      }
+      if (
+        props.category?.addToCartResponse?.response?.message &&
+        props.category?.addToCartResponse?.response?.status
+      ) {
+        props.clearAddToCartProps();
+        console.log(
+          'MessagesAndCheckup -> props.category?.addToCartResponse?.response?.message',
+          props.category?.addToCartResponse?.response?.message,
+        );
+
+        Alert.alert(
+          ``,
+          props.category?.addToCartResponse?.response?.message,
+          [{ text: 'OK' }],
+          {
+            cancelable: false,
+          },
+        );
+      } else if (
+        props.category?.addToCartResponse?.response &&
+        !props.category?.addToCartResponse?.response?.status
+      ) {
+        props.clearAddToCartProps();
+        Alert.alert(
+          ``,
+          props.category?.addToCartResponse?.response?.message ||
+            'Something went wrong, please try again!',
+          [{ text: 'OK' }],
+          {
+            cancelable: false,
+          },
+        );
+      }
+    }
+  }, [props.category]);
+
+  useEffect(() => {
+    props.getPackageList();
+  }, []);
+
+  useEffect(() => {
+    addedItems.length
+      ? setItemsCount(
+          (prevItemCount) =>
+            (prevItemCount +=
+              addedItems[addedItems.length - 1].packageData.servicedata
+                .netPrice),
+        )
+      : null;
+  }, [addedItems]);
+
+  //addToCart
+
+  const onItemAddedToCart = ({ item, packageData }) => {
+    setAddedItems((prevItems) => [...prevItems, { item, packageData }]);
+    const data = {
+      p_id: packageData._id,
+      quantity: 1,
+      grossprice: packageData?.servicedata?.grossPrice,
+      netprice: packageData?.servicedata?.netPrice,
+    };
+    props.addToCart(data);
+  };
 
   return (
     <Fragment>
@@ -108,6 +204,7 @@ const MessagesAndCheckup = ({ navigation }) => {
             </Text>
             {checkbox1.map((item, index) => (
               <View
+                key={index}
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -128,6 +225,7 @@ const MessagesAndCheckup = ({ navigation }) => {
 
             {checkbox2.map((item, index) => (
               <View
+                key={index}
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -182,53 +280,72 @@ const MessagesAndCheckup = ({ navigation }) => {
         <View style={styles.selectBoxContainer}>
           <View>
             <Text style={styles.selectBoxHeading}>Service For</Text>
-            <View style={{ ...styles.selectBox, paddingLeft: 10 }}>
-              <Text style={styles.selectBoxText}>Male</Text>
+            <View
+              style={{
+                ...styles.selectBox,
+                paddingHorizontal: 10,
+                width: 110,
+              }}>
+              <Text style={styles.selectBoxText} uppercase>
+                {gender}
+              </Text>
               <View style={styles.selectIcon} />
             </View>
           </View>
           <View>
             <Text style={styles.selectBoxHeading}>Service</Text>
             <View style={{ ...styles.selectBox, justifyContent: 'center' }}>
-              <Text style={styles.selectBoxText}>Massage</Text>
+              <Text style={styles.selectBoxText}>{selectedItem.title}</Text>
             </View>
           </View>
         </View>
 
         {/* Item Scroll */}
 
-        {type == 'message' ? (
+        {type !== 'package' ? (
           <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
             style={styles.messageFlatList}
-            data={messagesArray}
-            keyExtractor={(_, key) => key}
+            data={services}
+            keyExtractor={(_, key) => key.toString()}
             renderItem={({ item, index }) => (
-              <View
+              <TouchableOpacity
+                onPress={() => {
+                  setSelectedIndex(index);
+                  setSelectedItem(item);
+                }}
                 style={
-                  index == 1
+                  selectedIndex == index
                     ? {
                         ...styles.normalItem,
                         backgroundColor: colors.primaryBlue,
                         borderRadius: 20,
+                        alignItems: 'center',
+                        justifyContent: 'center',
                       }
                     : styles.normalItem
                 }>
                 <Image
-                  source={item.image}
-                  style={{ width: 10, marginRight: 5 }}
+                  source={{
+                    uri: `https://portal.rapidnation.in/category/${item.image}`,
+                  }}
+                  style={{
+                    width: 20,
+                    width: 20,
+                    backgroundColor: 'red',
+                  }}
                   resizeMode="contain"
                 />
                 <Text
                   style={
-                    index != 1
-                      ? { ...AppStyles.medium, color: 'black' }
-                      : { ...AppStyles.medium, color: colors.white }
+                    index == selectedIndex
+                      ? { ...AppStyles.medium, color: colors.white }
+                      : { ...AppStyles.medium, color: 'black' }
                   }>
-                  {item.name}
+                  {item.title}
                 </Text>
-              </View>
+              </TouchableOpacity>
             )}
           />
         ) : (
@@ -236,7 +353,7 @@ const MessagesAndCheckup = ({ navigation }) => {
             horizontal
             showsHorizontalScrollIndicator={false}
             data={packagesArray}
-            keyExtractor={(_, key) => key}
+            keyExtractor={(_, key) => key.toString()}
             renderItem={({ item, index }) => (
               <View
                 style={
@@ -284,18 +401,18 @@ const MessagesAndCheckup = ({ navigation }) => {
           }}>
           <TouchableOpacity
             style={
-              type == 'message'
+              type !== 'package'
                 ? styles.activeBox
                 : { marginHorizontal: 20, paddingBottom: 5 }
             }
-            onPress={() => setType('message')}>
+            onPress={() => setType(selectedItem.title)}>
             <Text
               style={
-                type == 'message'
+                type !== 'package'
                   ? { ...AppStyles.regularText, textAlign: 'center' }
                   : { ...AppStyles.medium, textAlign: 'center', color: 'black' }
               }>
-              Massage
+              {selectedItem.title}
             </Text>
           </TouchableOpacity>
           <View
@@ -322,12 +439,18 @@ const MessagesAndCheckup = ({ navigation }) => {
         {/* Items */}
 
         <View style={{ marginVertical: 15, paddingHorizontal: 10 }}>
-          {type == 'message' ? (
-            <MessagesCard item={{ image: images.head_shoulder }} />
+          {type !== 'package' ? (
+            <MessagesCard
+              image={{ image: images.head_shoulder }}
+              item={selectedItem}
+              onItemAddedToCart={onItemAddedToCart}
+              packageData={packageList.length ? packageList[0] : null}
+            />
           ) : (
             <MessagesCard
-              item={{ image: images.color_care }}
+              image={{ image: images.color_care }}
               isPackage
+              onItemAddedToCart={onItemAddedToCart}
               onPress={() => setIsModalVisible(true)}
             />
           )}
@@ -338,7 +461,7 @@ const MessagesAndCheckup = ({ navigation }) => {
             <Text style={{ ...AppStyles.regularText, color: colors.white }}>
               Items
             </Text>
-            <Text style={styles.priceBoxCount}>1</Text>
+            <Text style={styles.priceBoxCount}>{addedItems.length}</Text>
           </View>
           <TouchableOpacity
             onPress={() => navigation.navigate('MessagePackageDetails')}
@@ -354,7 +477,8 @@ const MessagesAndCheckup = ({ navigation }) => {
                 color: colors.white,
                 marginHorizontal: 4,
               }}>
-              999
+              {/* {packageList[0]?.servicedata?.netPrice} */}
+              {itemsCount}
             </Text>
             <Icon
               name="caretright"
@@ -383,7 +507,17 @@ const MessagesAndCheckup = ({ navigation }) => {
   );
 };
 
-export default MessagesAndCheckup;
+const mapDispatchToProps = {
+  getPackageList,
+  clearPackageListProps,
+  addToCart,
+  clearAddToCartProps,
+};
+const mapStateToProps = ({ category }) => ({
+  category,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MessagesAndCheckup);
 
 const styles = StyleSheet.create({
   modalHeading: {
@@ -521,3 +655,4 @@ const styles = StyleSheet.create({
     right: 3,
   },
 });
+//
